@@ -30,11 +30,12 @@
     <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="azuredeploy.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
+    <Content Include="azuredeploy-old.json" />
     <Content Include="Scripts\Deploy-AzureResourceGroup.ps1" />
-    <Content Include="Templates\azuredeploy.json" />
     <Content Include="Templates\azuredeploy.parameters.json" />
   </ItemGroup>
   <ItemGroup>
