@@ -31,11 +31,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="azuredeploy.json" />
+    <None Include="blackbox.conf" />
+    <None Include="blackbox.txt" />
+    <None Include="blackboxstartup.sh" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
     <Content Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <Content Include="Templates\azuredeploy.parameters.json" />
+    <None Include="HTMLPage1.html" />
+    <None Include="start.sh" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tools\AzCopy.exe" />
