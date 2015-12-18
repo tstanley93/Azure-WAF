@@ -40,6 +40,7 @@
     <Content Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <Content Include="Templates\azuredeploy.parameters.json" />
     <None Include="HTMLPage1.html" />
+    <None Include="README.md" />
     <None Include="start.sh" />
   </ItemGroup>
   <ItemGroup>

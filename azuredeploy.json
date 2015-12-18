@@ -450,9 +450,8 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/ROME/master/blackbox.conf",
-            "https://raw.githubusercontent.com/tstanley93/ROME/master/blackboxstartup.sh",
-            "https://raw.githubusercontent.com/tstanley93/ROME/master/start.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/blackboxstartup.sh",
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/start.sh"
           ],
           "commandToExecute": "[concat('bash start.sh ',parameters('dnsNameForPublicIP'),' ',parameters('applicationIP'), ' ',parameters('licenseToken'))]"
         }
