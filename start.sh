@@ -40,19 +40,19 @@
 ## asmarr=4 #secure string of SSL key file
 ## asmarr=5 #secure string of SSL chain file
 
-devicearr=$(echo $1 | tr ";" "\n")
-vipportarr=$(echo $2 | tr ";" "\n")
-protocolarr=$(echo $3 | tr ";" "\n")
-hostarr=$(echo $4 | tr ";" "\n")
-appportarr=$(echo $5 | tr ";" "\n")
-asmarr=$(echo $6 | tr ";" "\n")
+devicearr=(${1//;/ })
+vipportarr=(${2//;/ })
+protocolarr=(${3//;/ })
+hostarr=(${4//;/ })
+appportarr=(${5//;/ })
+asmarr=(${6//;/ })
 
-row1='"1":["'$vipportarr[0]'","'$protocolarr[0]'",["'$hostarr[0]'.'$hostarr[1]'.cloudapp.azure.com:'$appportarr[0]'"],"","","","","","'$asmarr[0]'","'$asmarr[1]'","yes","yes","yes","wanlan","'$asmarr[2]'","yes","","","","",""]'
-row2='"2":["'$vipportarr[1]'","'$protocolarr[1]'",["'$hostarr[0]'.'$hostarr[1]'.cloudapp.azure.com:'$appportarr[1]'"],"","","","","","'$asmarr[0]'","'$asmarr[1]'","yes","yes","yes","wanlan","'$asmarr[2]'","yes","","","$asmarr[0]","$asmarr[0]","$asmarr[0]"]'
+row1='"1":["'${vipportarr[0]}'","'${protocolarr[0]}'",["'${hostarr[0]}'.'${hostarr[1]}'.cloudapp.azure.com:'${appportarr[0]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","","",""]'
+row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}'.'${hostarr[1]}'.cloudapp.azure.com:'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","{$asmarr[3]}","${asmarr[4]}","${asmarr[5]}"]'
 
-deployment1='"deployment_'$devicearr[4]'.'$hostarr[1]'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{"configuration__saskey":''"tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=","configuration__saskeyname":"sharing-is-caring","configuration__eventhub":"event-horizon",''"configuration__eventhub_namespace":"event-horizon-ns","configuration__applianceid":"8A3ED335-F734-449F-A8FB-335B48FE3B50",''"configuration__logginglevel":"Alert","configuration__loggingtemplate":"CEF"},"tables":{"configuration__destination":{"column-names":[''"port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos",''"ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1','$row2'}}}}'
+deployment1='"deployment_'${devicearr[4]}'.'${hostarr[1]}'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{"configuration__saskey":''"tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=","configuration__saskeyname":"sharing-is-caring","configuration__eventhub":"event-horizon",''"configuration__eventhub_namespace":"event-horizon-ns","configuration__applianceid":"8A3ED335-F734-449F-A8FB-335B48FE3B50",''"configuration__logginglevel":"Alert","configuration__loggingtemplate":"CEF"},"tables":{"configuration__destination":{"column-names":[''"port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos",''"ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1','$row2'}}}}'
 
-jsonfile='{"loadbalance":{"is_master":"true","master_hostname":"","master_address":"","master_password":"'$devicearr[2]'"'',"device_hostname":"'$devicearr[0]'","device_address":"'$devicearr[1]'","device_password":"'$devicearr[2]'"},"bigip":{"application_name":"Azure Security F5 WAF"'',"ntp_servers":"1.pool.ntp.org 2.pool.ntp.org","ssh_key_inject":"false","change_passwords":"false","license":{"basekey":"'$devicearr[3]'"},''"modules":{"auto_provision":"true","ltm":"nominal","afm":"none","asm":"nominal"},"redundancy":{"provision":"false"},"network"'':{"provision":"false"},"iappconfig":{"f5.rome_waf":{"template_location":''"http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf.tmpl","deployments":{'$deployment1'}}}}}'
+jsonfile='{"loadbalance":{"is_master":"true","master_hostname":"","master_address":"","master_password":"'${devicearr[2]}'"'',"device_hostname":"'${devicearr[0]}'","device_address":"'${devicearr[1]}'","device_password":"'${devicearr[2]}'"},"bigip":{"application_name":"Azure Security F5 WAF"'',"ntp_servers":"1.pool.ntp.org 2.pool.ntp.org","ssh_key_inject":"false","change_passwords":"false","license":{"basekey":"'${devicearr[3]}'"},''"modules":{"auto_provision":"true","ltm":"nominal","afm":"none","asm":"nominal"},"redundancy":{"provision":"false"},"network"'':{"provision":"false"},"iappconfig":{"f5.rome_waf":{"template_location":''"http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf.tmpl","deployments":{'$deployment1'}}}}}'
 
 echo $jsonfile > /config/blackbox.conf
 
