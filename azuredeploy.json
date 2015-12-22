@@ -133,18 +133,6 @@
         "Standard_ZRS"
       ]
     },
-    "applicationIP": {
-      "type": "string",
-      "metadata": {
-        "description": "The FQDN of the applicaiton that you would like to be behind this F5 Web Applicaiton Firewall. "
-      }
-    },
-    "certFile": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Paste in the SSL Certificate to be used by the F5 Web Applicaiton Firewall."
-      }
-    },
     "licenseToken": {
       "type": "string",
       "metadata": {
@@ -211,19 +199,19 @@
       }
     },
     "appCertificate": {
-      "type": "securestring",
+      "type": "string",
       "metadata": {
         "description": "Please paste in the SSL Certificate. (Optional)"
       }
     },
     "appKey": {
-      "type": "securestring",
+      "type": "string",
       "metadata": {
         "description": "Please paste in the SSL Key. (Optional)"
       }
     },
     "appChain": {
-      "type": "securestring",
+      "type": "string",
       "metadata": {
         "description": "Please paste in the SSL Chain. (Optional)"
       }
