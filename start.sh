@@ -23,36 +23,36 @@
 ## 11/23/15#  Thomas Stanley#    Created base functionality              ##
 ###########################################################################
 
-## Create blackbox.conf from a predefined string.
-## Create logic to create each row we needed.  
-## -->Could be multiple rows for each application.
-## -->Maybe we should break this at the deployment level.
-## -->Will need more logic for this.
-ismaster=$1 #true or false
-masterhostname=$2 #if master leave blank
-masteraddress=$3 #if master leavge blank
-masterpassword=$4 #password for master
-devicehostname=$5 #hostname of this device
-deviceaddress=$6 #IP address of this device
-basekey=$7 #BYOL License key
-appname=$8 #the name of the application
-rownumber=$9 #number of the row that will be added
-vipport=$10 #port number of the BIG-IP VIP
-protocol=$11 #protocol for the VIP like http or https
-host=$12 #ip address of the application servers, or host portion of URL
-location=$13 #if URL instead of IP address then the domain with location of the URL
-appport=$14 #the port of the application
-asmapptype=$15 # linux or windows
-asmlevel=$16 #blocking level, high medium low
-fqdn=$17 #new fqdn for the application
-sslpkcs12=$18 #path of the pkcs file
-sslpassphrase=$19 #password for the pkcs file
+## devicearr=0 #hostname of this device
+## devicearr=1 #IP address of this device
+## devicearr=2 #login password for the WAF
+## devicearr=3 #BYOL License key
+## devicearr=4 #the name of the application
+## vipportarr=0 #port numbers of the BIG-IP VIP semicolon delimited
+## protocolarr=0 #protocol for the VIP like http or https semicolon delimited
+## hostarr=0 #ip address of the application servers, or host portion of URL
+## hostarr=1 #if URL instead of IP address then the domain with location of the URL
+## appportarr=0 #the port of the application
+## asmarr=0 # linux or windows
+## asmarr=1 #blocking level, high medium low
+## asmarr=2 #new fqdn for the application
+## asmarr=3 #secure string of SSL certificate file
+## asmarr=4 #secure string of SSL key file
+## asmarr=5 #secure string of SSL chain file
 
-row1='"'$rownumber'":["'$vipport'","'$protocol'",["'$host'.'$location'.cloudapp.azure.com:'$appport'"],"","","","","","'$asmapptype'","'$asmlevel'","yes","yes","yes","wanlan","'$fqdn'","yes","","","","",""]'
+devicearr=$(echo $1 | tr ";" "\n")
+vipportarr=$(echo $2 | tr ";" "\n")
+protocolarr=$(echo $3 | tr ";" "\n")
+hostarr=$(echo $4 | tr ";" "\n")
+appportarr=$(echo $5 | tr ";" "\n")
+asmarr=$(echo $6 | tr ";" "\n")
 
-deployment1='"deployment_'$appname'.'$location'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{"configuration__saskey":''"tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=","configuration__saskeyname":"sharing-is-caring","configuration__eventhub":"event-horizon",''"configuration__eventhub_namespace":"event-horizon-ns","configuration__applianceid":"8A3ED335-F734-449F-A8FB-335B48FE3B50",''"configuration__logginglevel":"Alert","configuration__loggingtemplate":"CEF"},"tables":{"configuration__destination":{"column-names":[''"port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos",''"ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1'}}}}'
+row1='"1":["'$vipportarr[0]'","'$protocolarr[0]'",["'$hostarr[0]'.'$hostarr[1]'.cloudapp.azure.com:'$appportarr[0]'"],"","","","","","'$asmarr[0]'","'$asmarr[1]'","yes","yes","yes","wanlan","'$asmarr[2]'","yes","","","","",""]'
+row2='"2":["'$vipportarr[1]'","'$protocolarr[1]'",["'$hostarr[0]'.'$hostarr[1]'.cloudapp.azure.com:'$appportarr[1]'"],"","","","","","'$asmarr[0]'","'$asmarr[1]'","yes","yes","yes","wanlan","'$asmarr[2]'","yes","","","$asmarr[0]","$asmarr[0]","$asmarr[0]"]'
 
-jsonfile='{"loadbalance":{"is_master":"true","master_hostname":"'$masterhostname'","master_address":"'$masteraddress'","master_password":"'$masterpassword'"'',"device_hostname":"'$devicehostname'","device_address":"'$deviceaddress'","device_password":"'$masterpassword'"},"bigip":{"application_name":"Azure Security F5 WAF"'',"ntp_servers":"1.pool.ntp.org 2.pool.ntp.org","ssh_key_inject":"false","change_passwords":"false","license":{"basekey":"'$basekey'"},''"modules":{"auto_provision":"true","ltm":"nominal","afm":"none","asm":"nominal"},"redundancy":{"provision":"false"},"network"'':{"provision":"false"},"iappconfig":{"f5.rome_waf":{"template_location":''"http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf.tmpl","deployments":{'$deployment1'}}}}}'
+deployment1='"deployment_'$devicearr[4]'.'$hostarr[1]'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{"configuration__saskey":''"tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=","configuration__saskeyname":"sharing-is-caring","configuration__eventhub":"event-horizon",''"configuration__eventhub_namespace":"event-horizon-ns","configuration__applianceid":"8A3ED335-F734-449F-A8FB-335B48FE3B50",''"configuration__logginglevel":"Alert","configuration__loggingtemplate":"CEF"},"tables":{"configuration__destination":{"column-names":[''"port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos",''"ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1','$row2'}}}}'
+
+jsonfile='{"loadbalance":{"is_master":"true","master_hostname":"","master_address":"","master_password":"'$devicearr[2]'"'',"device_hostname":"'$devicearr[0]'","device_address":"'$devicearr[1]'","device_password":"'$devicearr[2]'"},"bigip":{"application_name":"Azure Security F5 WAF"'',"ntp_servers":"1.pool.ntp.org 2.pool.ntp.org","ssh_key_inject":"false","change_passwords":"false","license":{"basekey":"'$devicearr[3]'"},''"modules":{"auto_provision":"true","ltm":"nominal","afm":"none","asm":"nominal"},"redundancy":{"provision":"false"},"network"'':{"provision":"false"},"iappconfig":{"f5.rome_waf":{"template_location":''"http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf.tmpl","deployments":{'$deployment1'}}}}}'
 
 echo $jsonfile > /config/blackbox.conf
 
@@ -61,4 +61,4 @@ echo $jsonfile > /config/blackbox.conf
 ## Move the files and run them.
 mv ./blackboxstartup.sh /config/blackboxstartup.sh
 chmod u+x /config/blackboxstartup.sh
-bash /config/blackboxstartup.sh
+#bash /config/blackboxstartup.sh
