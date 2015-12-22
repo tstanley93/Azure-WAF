@@ -200,18 +200,21 @@
     },
     "appCertificate": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Please paste in the SSL Certificate. (Optional)"
       }
     },
     "appKey": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Please paste in the SSL Key. (Optional)"
       }
     },
     "appChain": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "Please paste in the SSL Chain. (Optional)"
       }
