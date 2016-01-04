@@ -90,6 +90,13 @@
         "description": "Address space of the Subnet that the BIG-IP will be created on."
       }
     },
+    "ipAddress": {
+      "type": "string",
+      "defaultValue": "10.10.1.50",
+      "metadata": {
+        "description": "Specifiy an IP Address from this subnet as IP Address of the Web Application Firewall."
+      }
+    },
     "nicName": {
       "type": "string",
       "defaultValue": "BIGIPNic",
@@ -126,16 +133,90 @@
         "Standard_ZRS"
       ]
     },
-    "applicationIP": {
-      "type": "string",
-      "metadata": {
-        "description": "The FQDN of the applicaiton that you would like to be behind this F5 Web Applicaiton Firewall. "
-      }
-    },
     "licenseToken": {
       "type": "string",
       "metadata": {
         "description": "The License Token for the BYOL F5 Web Application Firewall."
+      }
+    },
+    "appName": {
+      "type": "string",
+      "metadata": {
+        "description": "Please provide a name for your application."
+      }
+    },
+    "wafPorts": {
+      "type": "string",
+      "metadata": {
+        "description": "Semi-Colon separated list of ports (880;8440) that will be used to configure the WAF VIP's, (e.g. 880 for port 80 and 8443 for port 443)."
+      }
+    },
+    "protocolPorts": {
+      "type": "string",
+      "metadata": {
+        "description": "Semi-Colon separated list of protocols (http;https) that will be used to configure the WAF VIP's, (e.g. http for port 80 and https for SSL)."
+      }
+    },
+    "appAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "The public IP address or DNS hostname (not FQDN) of the Application that this WAF is for."
+      }
+    },
+    "appPorts": {
+      "type": "string",
+      "metadata": {
+        "description": "Semi-Colon separated list of ports for the application (80;443) these are the outside ports that the WAF will talk to your applicaiton on, (e.g. 80 and 443)."
+      }
+    },
+    "appType": {
+      "type": "string",
+      "metadata": {
+        "description": "Is your application running on Linux or Windows?"
+      },
+      "defaultValue": "Linux",
+      "allowedValues": [
+        "Linux",
+        "Windows"
+      ]
+    },
+    "blockingLevel": {
+      "type": "string",
+      "metadata": {
+        "description": "Please select a blocking level."
+      },
+      "defaultValue": "Medium",
+      "allowedValues": [
+        "Low",
+        "Medium",
+        "High"
+      ]
+    },
+    "appFQDN": {
+      "type": "string",
+      "metadata": {
+        "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
+      }
+    },
+    "appCertificate": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Please paste in the SSL Certificate. (Optional)"
+      }
+    },
+    "appKey": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Please paste in the SSL Key. (Optional)"
+      }
+    },
+    "appChain": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Please paste in the SSL Chain. (Optional)"
       }
     }
   },
@@ -203,7 +284,8 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "privateIPAllocationMethod": "Dynamic",
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[parameters('ipAddress')]",
               "subnet": {
                 "id": "[variables('subnetRef')]"
               },
@@ -453,7 +535,7 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/blackboxstartup.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ',parameters('dnsNameForPublicIP'),' ',parameters('applicationIP'), ' ',parameters('licenseToken'))]"
+          "commandToExecute": "[concat('bash start.sh ',parameters('vmName'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('licenseToken'), ' ',parameters('appName'), ' ',parameters('wafPorts'),' ',parameters('protocolPorts'),' ',parameters('appAddress'),';',parameters('location'),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
         }
       }
     }
