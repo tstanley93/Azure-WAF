@@ -539,5 +539,11 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "siteUri": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn]"
+    }
+  }
 }
