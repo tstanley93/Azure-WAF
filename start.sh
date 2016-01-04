@@ -23,23 +23,25 @@
 ## 11/23/15#  Thomas Stanley#    Created base functionality              ##
 ###########################################################################
 
+### Parameter Legend  ###
 ## devicearr=0 #hostname of this device
 ## devicearr=1 #IP address of this device
 ## devicearr=2 #login password for the WAF
 ## devicearr=3 #BYOL License key
 ## devicearr=4 #the name of the application
-## vipportarr=0 #port numbers of the BIG-IP VIP semicolon delimited
+## vipportarr=0 #port numbers of the BIG-IP VIP semicolon delimited (80;443;8080)
 ## protocolarr=0 #protocol for the VIP like http or https semicolon delimited
-## hostarr=0 #ip address of the application servers, or host portion of URL
-## hostarr=1 #if URL instead of IP address then the domain with location of the URL
-## appportarr=0 #the port of the application
+## hostarr=0 #ip address of the application servers, or host portion of URL (192.168.1.20 or www)
+## hostarr=1 #region or location of the URL (westus, eastus)
+## appportarr=0 #the port of the application (80;443;8080)
 ## asmarr=0 # linux or windows
 ## asmarr=1 #blocking level, high medium low
-## asmarr=2 #new fqdn for the application
+## asmarr=2 #fqdn for the application
 ## asmarr=3 #secure string of SSL certificate file
 ## asmarr=4 #secure string of SSL key file
 ## asmarr=5 #secure string of SSL chain file
 
+## Build the arrays based on the semicolon delimited command line argument passed from json template.
 devicearr=(${1//;/ })
 vipportarr=(${2//;/ })
 protocolarr=(${3//;/ })
@@ -47,6 +49,7 @@ hostarr=(${4//;/ })
 appportarr=(${5//;/ })
 asmarr=(${6//;/ })
 
+## Construct the blackbox.conf file using the arrays.
 row1='"1":["'${vipportarr[0]}'","'${protocolarr[0]}'",["'${hostarr[0]}'.'${hostarr[1]}'.cloudapp.azure.com:'${appportarr[0]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","","",""]'
 row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}'.'${hostarr[1]}'.cloudapp.azure.com:'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","{$asmarr[3]}","${asmarr[4]}","${asmarr[5]}"]'
 
