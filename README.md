@@ -19,4 +19,3 @@ The F5 WAF's will be fully configured with the base Security Blocking template t
 </a>
 
 
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)

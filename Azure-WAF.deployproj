@@ -29,6 +29,7 @@
     <None Include="blackbox.conf" />
     <None Include="blackbox.txt" />
     <None Include="blackboxstartup.sh" />
+    <None Include="blackbox_check.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>

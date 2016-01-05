@@ -535,9 +535,15 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/blackboxstartup.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ',parameters('vmName'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('licenseToken'), ' ',parameters('appName'), ' ',parameters('wafPorts'),' ',parameters('protocolPorts'),' ',parameters('appAddress'),';',parameters('location'),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
+          "commandToExecute": "[concat('bash start.sh ',parameters('vmName'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocolPorts'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "siteUri": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).properties.dnsSettings.fqdn]"
+    }
+  }
 }
