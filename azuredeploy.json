@@ -552,7 +552,7 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':',reference(concat(variables('lbID'),'/inboundNatRules/sshmgt')).frontendPort)]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':',reference(concat(variables('lbID'),'/inboundNatRules/guimgt')).frontendPort)]"
     },
     "sshUri": {
       "type": "string",
