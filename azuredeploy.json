@@ -554,7 +554,7 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':',reference(variables('lbID')).inboundNatRules[0].frontendPort)]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443')]"
     },
     "sshUri": {
       "type": "string",
