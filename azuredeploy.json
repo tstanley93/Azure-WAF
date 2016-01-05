@@ -553,7 +553,11 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn]"
+      "value": "[concat('https://',reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn,':',reference(concat('Microsoft.Network/loadBalancers/',parameters('loadBalancerName'))).inboundNatRules[0].frontendPort)]"
+    },
+    "sshUri": {
+      "type": "string",
+      "value": "[concat(reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn,' ',reference(concat('Microsoft.Network/loadBalancers/',parameters('loadBalancerName'))).inboundNatRules[1].frontendPort)]"
     }
   }
 }
