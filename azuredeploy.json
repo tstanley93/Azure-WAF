@@ -151,7 +151,7 @@
         "description": "Semi-Colon separated list of ports (880;8440) that will be used to configure the WAF VIP's, (e.g. 880 for port 80 and 8443 for port 443)."
       }
     },
-    "protocolPorts": {
+    "protocols": {
       "type": "string",
       "metadata": {
         "description": "Semi-Colon separated list of protocols (http;https) that will be used to configure the WAF VIP's, (e.g. http for port 80 and https for SSL)."
@@ -535,7 +535,7 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/blackboxstartup.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ',parameters('vmName'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocolPorts'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
+          "commandToExecute": "[concat('bash start.sh ',parameters('vmName'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
         }
       }
     }
@@ -543,7 +543,7 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).properties.dnsSettings.fqdn]"
+      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn]"
     }
   }
 }

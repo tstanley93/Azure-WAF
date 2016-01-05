@@ -4,7 +4,7 @@
     "master_hostname": "",
     "master_address": "",
     "master_password": "Junct10n",
-    "device_hostname": "romewaf05",
+    "device_hostname": "romewaf06VM",
     "device_address": "10.10.1.50",
     "device_password": "Junct10n"
   },
@@ -57,7 +57,7 @@
                     "yes",
                     "yes",
                     "wanlan",
-                    "www.contoso.com",
+                    "www.example.com",
                     "yes",
                     "",
                     "",
@@ -66,7 +66,7 @@
                     ""
                   ],
                   "2": [
-                    "8443",
+                    "8444",
                     "https",
                     [ "192.168.1.200:443" ],
                     "",
@@ -80,11 +80,11 @@
                     "yes",
                     "yes",
                     "wanlan",
-                    "www.contoso.com",
+                    "www.example.com",
                     "yes",
                     "",
                     "",
-                    "{Linux[3]}",
+                    "",
                     "",
                     ""
                   ]
