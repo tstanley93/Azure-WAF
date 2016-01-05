@@ -4,6 +4,7 @@
   "parameters": {
     "newStorageAccountName": {
       "type": "string",
+      "defaultValue": "newWAFStorageAccount",
       "metadata": {
         "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
       }
@@ -32,6 +33,7 @@
     },
     "vmName": {
       "type": "string",
+      "defaultValue": "newWAFName",
       "metadata": {
         "description": "The name of this BIG-IP"
       }
@@ -64,7 +66,7 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "BIGIPVNET",
+      "defaultValue": "wAFVNet",
       "metadata": {
         "description": "Name of the newly created Virtual Network"
       }
@@ -78,7 +80,7 @@
     },
     "subnetName": {
       "type": "string",
-      "defaultValue": "BIGIPSubNet",
+      "defaultValue": "wAFSubNet",
       "metadata": {
         "description": "Name of the Subnet that the BIG-IP will be created on."
       }
@@ -99,27 +101,28 @@
     },
     "nicName": {
       "type": "string",
-      "defaultValue": "BIGIPNic",
+      "defaultValue": "wAFNic",
       "metadata": {
         "description": "The name of the NIC that will be attached to the BIG-IP."
       }
     },
     "loadBalancerName": {
       "type": "string",
-      "defaultValue": "BIGIPLoadBlancer",
+      "defaultValue": "wAFLoadBlancer",
       "metadata": {
         "description": "The nam eof the Azure Load Balancer that will support the BIG-IP for clustering."
       }
     },
     "availabilitySetName": {
       "type": "string",
-      "defaultValue": "BIGIPAvailabilitySet",
+      "defaultValue": "wAFAvailabilitySet",
       "metadata": {
         "description": "The name of the Azure Availability Set that will keep more than one BIG-IP on different virtual hardware for up time."
       }
     },
     "dnsNameForPublicIP": {
       "type": "string",
+      "defaultValue": "newWAFPublicIP",
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
@@ -135,44 +138,50 @@
     },
     "licenseToken": {
       "type": "string",
+      "defaultValue": "BYOL-Key-From-F5",
       "metadata": {
         "description": "The License Token for the BYOL F5 Web Application Firewall."
       }
     },
     "appName": {
       "type": "string",
+      "defaultValue": "myAppName",
       "metadata": {
         "description": "Please provide a name for your application."
       }
     },
     "wafPorts": {
       "type": "string",
+      "defaultValue": "880;8444",
       "metadata": {
-        "description": "Semi-Colon separated list of ports (880;8440) that will be used to configure the WAF VIP's, (e.g. 880 for port 80 and 8443 for port 443)."
+        "description": "Semi-Colon separated list of ports (880;8440) that will be used to configure the WAF VIP's, (e.g. 880 for port 80 and 8444 for port 443)."
       }
     },
     "protocols": {
       "type": "string",
+      "defaultValue": "http;https",
       "metadata": {
         "description": "Semi-Colon separated list of protocols (http;https) that will be used to configure the WAF VIP's, (e.g. http for port 80 and https for SSL)."
       }
     },
     "appAddress": {
       "type": "string",
+      "defaultValue": "10.0.0.1",
       "metadata": {
-        "description": "The public IP address or DNS hostname (not FQDN) of the Application that this WAF is for."
+        "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
       }
     },
     "appPorts": {
       "type": "string",
+      "defaultValue": "80;443",
       "metadata": {
-        "description": "Semi-Colon separated list of ports for the application (80;443) these are the outside ports that the WAF will talk to your applicaiton on, (e.g. 80 and 443)."
+        "description": "Semi-Colon separated list of ports for the application (80;443) these are the ports that your applicaiton is listening on, (e.g. 80 and 443)."
       }
     },
     "appType": {
       "type": "string",
       "metadata": {
-        "description": "Is your application running on Linux or Windows?"
+        "description": "Is your application running on a Linux OS or a Windows OS?"
       },
       "defaultValue": "Linux",
       "allowedValues": [
@@ -183,7 +192,7 @@
     "blockingLevel": {
       "type": "string",
       "metadata": {
-        "description": "Please select a blocking level."
+        "description": "Please select how aggressive you would like the blocking level of this WAF.  The more aggressive the blocking level, the more potential false-positives the WAF may detect."
       },
       "defaultValue": "Medium",
       "allowedValues": [
@@ -194,6 +203,7 @@
     },
     "appFQDN": {
       "type": "string",
+      "defaultValue": "www.contoso.com",
       "metadata": {
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
