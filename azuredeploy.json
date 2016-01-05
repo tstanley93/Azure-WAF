@@ -554,11 +554,11 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':',reference(parameters('loadBalancerName')).location)]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443')]"
     },
     "sshUri": {
       "type": "string",
-      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',reference(variables('lbID')).properties.inboundNatRules[1].frontendPort)]"
+      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',8022)]"
     }
   }
 }
