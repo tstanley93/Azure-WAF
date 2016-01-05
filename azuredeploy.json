@@ -552,11 +552,11 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':')]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':',reference(concat(variables('lbID'),'/inboundNatRules/sshmgt')).frontendPort)]"
     },
     "sshUri": {
       "type": "string",
-      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',reference(variables('lbID')).inboundNatRules[1].frontendPort)]"
+      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',reference(concat(variables('lbID'),'/inboundNatRules/sshmgt')).frontendPort)]"
     }
   }
 }
