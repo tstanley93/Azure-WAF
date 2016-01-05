@@ -42,12 +42,12 @@
 ## asmarr=5 #secure string of SSL chain file
 
 ## Build the arrays based on the semicolon delimited command line argument passed from json template.
-echo $1 > /config/blackbox_out
-echo $2 >> /config/blackbox_out
-echo $3 >> /config/blackbox_out
-echo $4 >> /config/blackbox_out
-echo $5 >> /config/blackbox_out
-echo $6 >> /config/blackbox_out
+IFS=';' read -ra devicearr <<< "$1"    
+IFS=';' read -ra vipportarr <<< "$2"    
+IFS=';' read -ra protocolarr <<< "$3"    
+IFS=';' read -ra hostarr <<< "$4"    
+IFS=';' read -ra appportarr <<< "$5"    
+IFS=';' read -ra asmarr <<< "$6"    
 
 ## Construct the blackbox.conf file using the arrays.
 row1='"1":["'${vipportarr[0]}'","'${protocolarr[0]}'",["'${hostarr[0]}':'${appportarr[0]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","","",""]'
