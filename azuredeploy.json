@@ -553,11 +553,11 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn,':',reference(concat('Microsoft.Network/loadBalancers/',parameters('loadBalancerName'),'/inboundNatRules/guimgt')).frontendPort)]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':',reference(variables('lbID')).inboundNatRules[0].frontendPort)]"
     },
     "sshUri": {
       "type": "string",
-      "value": "[concat(reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn,' ',reference(concat('Microsoft.Network/loadBalancers/',parameters('loadBalancerName'),'/inboundNatRules/sshmgt')).frontendPort)]"
+      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',reference(variables('lbID')).inboundNatRules[1].frontendPort)]"
     }
   }
 }
