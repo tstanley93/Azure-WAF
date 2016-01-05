@@ -89,7 +89,7 @@ done
 
 ## Construct the blackbox.conf file using the arrays.
 row1='"1":["'${vipportarr[0]}'","'${protocolarr[0]}'",["'${hostarr[0]}':'${appportarr[0]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","","",""]'
-row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}':'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","'{$asmarr[3]}'","'${asmarr[4]}'","'${asmarr[5]}'"]'
+row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}':'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","'${asmarr[3]}'","'${asmarr[4]}'","'${asmarr[5]}'"]'
 
 deployment1='"deployment_'${devicearr[4]}'.'${hostarr[1]}'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{"configuration__saskey":''"tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=","configuration__saskeyname":"sharing-is-caring","configuration__eventhub":"event-horizon",''"configuration__eventhub_namespace":"event-horizon-ns","configuration__applianceid":"8A3ED335-F734-449F-A8FB-335B48FE3B50",''"configuration__logginglevel":"Alert","configuration__loggingtemplate":"CEF"},"tables":{"configuration__destination":{"column-names":[''"port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos",''"ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1','$row2'}}}}'
 

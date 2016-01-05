@@ -543,7 +543,7 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).dnsSettings.fqdn]"
+      "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))).properties.dnsSettings.fqdn]"
     }
   }
 }
