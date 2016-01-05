@@ -122,7 +122,6 @@
     },
     "dnsNameForPublicIP": {
       "type": "string",
-      "defaultValue": "newWAFPublicIP",
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
@@ -553,7 +552,7 @@
   "outputs": {
     "siteUri": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':',reference(variables('lbID')).inboundNatRules[0].frontendPort)]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':')]"
     },
     "sshUri": {
       "type": "string",
