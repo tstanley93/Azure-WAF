@@ -6,7 +6,7 @@
       "type": "string",
       "defaultValue": "newWAFStorageAccount",
       "metadata": {
-        "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
+        "description": "Unique DNS Name for the Storage Account where the Web Applicatin Firewalls' disks will be placed."
       }
     },
     "location": {
@@ -28,21 +28,21 @@
         "West US"
       ],
       "metadata": {
-        "description": "The data center you want to install this WAF into."
+        "description": "The data center you want to install these Web Applicatin Firewall's into."
       }
     },
     "wafNamePrefix": {
       "type": "string",
       "defaultValue": "newWAFName",
       "metadata": {
-        "description": "The prefix for each of the WAF's to be created."
+        "description": "The name prefix for each of the Web Applicatin Firewall's that will be created."
       }
     },
     "numberOFWAFs": {
       "type": "int",
       "defaultValue": 2,
       "metadata": {
-        "description": "The number of WAF's up to 4 to deployed infront of your application."
+        "description": "The number of Web Applicatin Firewall's (Up to 4) that will be deployed infront of your application."
       }
     },
     "vmSize": {
@@ -62,13 +62,13 @@
       "type": "string",
       "defaultValue": "azureuser",
       "metadata": {
-        "description": "User name for the Virtual Machine."
+        "description": "User name to login to the Web Applicatin Firewall."
       }
     },
     "adminPassword": {
       "type": "securestring",
       "metadata": {
-        "description": "Password for the Virtual Machine."
+        "description": "Password to login to the Web Applicatin Firewall."
       }
     },
     "virtualNetworkName": {
@@ -89,14 +89,14 @@
       "type": "string",
       "defaultValue": "wAFSubNet",
       "metadata": {
-        "description": "Name of the Subnet that the BIG-IP will be created on."
+        "description": "Name of the Subnet that the Web Applicatin Firewall will be created on."
       }
     },
     "subnetPrefix": {
       "type": "string",
       "defaultValue": "10.10.1.0/24",
       "metadata": {
-        "description": "Address space of the Subnet that the BIG-IP will be created on."
+        "description": "Address space of the Subnet that the Web Applicatin Firewall will be created on."
       }
     },
     "ipAddress": {
@@ -106,31 +106,31 @@
         "description": "Specifiy an IP Address from this subnet as IP Address of the Web Application Firewall."
       }
     },
-    "nicName": {
+    "nicNamePrefix": {
       "type": "string",
       "defaultValue": "wAFNic",
       "metadata": {
-        "description": "The name of the NIC that will be attached to the BIG-IP."
+        "description": "The prefix of the NIC name that will be attached to the Web Application Firewall."
       }
     },
     "loadBalancerName": {
       "type": "string",
       "defaultValue": "wAFLoadBlancer",
       "metadata": {
-        "description": "The nam eof the Azure Load Balancer that will support the BIG-IP for clustering."
+        "description": "The name of the Azure Load Balancer that will support the Web Application Firewall for clustering."
       }
     },
     "availabilitySetName": {
       "type": "string",
       "defaultValue": "wAFAvailabilitySet",
       "metadata": {
-        "description": "The name of the Azure Availability Set that will keep more than one BIG-IP on different virtual hardware for up time."
+        "description": "The name of the Azure Availability Set that will keep more than one Web Application Firewall on different virtual hardware for up time."
       }
     },
     "dnsNameForPublicIP": {
       "type": "string",
       "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        "description": "Unique DNS Name for the Public IP used to access the Web Application Firewalls for management."
       }
     },
     "storType": {
@@ -288,7 +288,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[parameters('nicName')]",
+      "name": "[parameters('nicNamePrefix')]",
       "location": "[parameters('location')]",
       "tags": {
         "displayName": "NetworkInterface"
@@ -472,13 +472,17 @@
       "name": "[parameters('wafNamePrefix')]",
       "location": "[parameters('location')]",
       "tags": {
-        "displayName": "VirtualMachine"
+        "displayName": "WAFs"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('nicName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('nicNamePrefix'))]",
         "[concat('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]"
       ],
+      "copy": {
+        "count": "[parameters('numberOFWAFs')]",
+        "name": "wafcopy"
+      },
       "plan": {
         "name": "f5-bigip-virtual-edition-best-byol",
         "publisher": "f5-networks",
@@ -515,7 +519,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('nicNamePrefix'))]"
             }
           ]
         },
