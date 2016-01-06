@@ -31,18 +31,18 @@
         "description": "The data center you want to install this WAF into."
       }
     },
-    "vmName": {
+    "wafNamePrefix": {
       "type": "string",
       "defaultValue": "newWAFName",
       "metadata": {
-        "description": "The name of this BIG-IP"
+        "description": "The prefix for each of the WAF's to be created."
       }
     },
     "numberOFWAFs": {
       "type": "int",
       "defaultValue": 2,
       "metadata": {
-        "description": "The number of WAF's to deploy in front of your application."
+        "description": "The number of WAF's up to 4 to deployed infront of your application."
       }
     },
     "vmSize": {
@@ -469,7 +469,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('vmName')]",
+      "name": "[parameters('wafNamePrefix')]",
       "location": "[parameters('location')]",
       "tags": {
         "displayName": "VirtualMachine"
@@ -492,7 +492,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[parameters('vmName')]",
+          "computerName": "[parameters('wafNamePrefix')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -538,11 +538,11 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/start')]",
+      "name": "[concat(parameters('wafNamePrefix'),'/start')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/',parameters('vmName'))]"
+        "[concat('Microsoft.Compute/virtualMachines/',parameters('wafNamePrefix'))]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -553,7 +553,7 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/blackboxstartup.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ',parameters('vmName'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
+          "commandToExecute": "[concat('bash start.sh ',parameters('wafNamePrefix'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
         }
       }
     }
