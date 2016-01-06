@@ -4,7 +4,7 @@
     "master_hostname": "",
     "master_address": "",
     "master_password": "Junct10n",
-    "device_hostname": "romewaf06VM",
+    "device_hostname": "romewaf13WAF",
     "device_address": "10.10.1.50",
     "device_password": "Junct10n"
   },
@@ -13,7 +13,7 @@
     "ntp_servers": "1.pool.ntp.org 2.pool.ntp.org",
     "ssh_key_inject": "false",
     "change_passwords": "false",
-    "license": { "basekey": "licensetokenstring" },
+    "license": { "basekey": "ZQTMG-JGCOX-IJDQQ-YHYWY-TNRZSFU" },
     "modules": {
       "auto_provision": "true",
       "ltm": "nominal",
@@ -26,7 +26,7 @@
       "f5.rome_waf": {
         "template_location": "http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf.tmpl",
         "deployments": {
-          "deployment_karlapp01.WestUS.cloudapp.azure.com": {
+          "deployment_romeapp21.WestUS.cloudapp.azure.com": {
             "traffic-group": "none",
             "strict-updates": "disabled",
             "variables": {
@@ -45,7 +45,7 @@
                   "1": [
                     "880",
                     "http",
-                    [ "192.168.1.200:80" ],
+                    [ "40.78.109.149:80" ],
                     "",
                     "",
                     "",
@@ -57,7 +57,7 @@
                     "yes",
                     "yes",
                     "wanlan",
-                    "www.example.com",
+                    "romewaf13.eisconsult.com",
                     "yes",
                     "",
                     "",
@@ -68,7 +68,7 @@
                   "2": [
                     "8444",
                     "https",
-                    [ "192.168.1.200:443" ],
+                    [ "40.78.109.149:443" ],
                     "",
                     "",
                     "",
@@ -80,7 +80,7 @@
                     "yes",
                     "yes",
                     "wanlan",
-                    "www.example.com",
+                    "romewaf13.eisconsult.com",
                     "yes",
                     "",
                     "",
