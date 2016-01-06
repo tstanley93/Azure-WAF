@@ -38,6 +38,13 @@
         "description": "The name of this BIG-IP"
       }
     },
+    "numberOFWAFs": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "The number of WAF's to deploy in front of your application."
+      }
+    },
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_A3",
