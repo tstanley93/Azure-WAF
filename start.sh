@@ -59,7 +59,8 @@ jsonfile='{"loadbalance":{"is_master":"true","master_hostname":"","master_addres
 
 echo $jsonfile > /config/blackbox.conf
 
-
+## Create a file with the license token in it.
+echo ${devicearr[3]} > /tmp/bigip.license
 
 ## Move the files and run them.
 mv ./blackboxstartup.sh /config/blackboxstartup.sh
