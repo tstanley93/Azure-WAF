@@ -63,6 +63,6 @@ echo $jsonfile > /config/blackbox.conf
 echo ${devicearr[3]} > /tmp/bigip.license
 
 ## Move the files and run them.
-mv ./blackboxstartup.sh /config/blackboxstartup.sh
-chmod u+x /config/blackboxstartup.sh
-#bash /config/blackboxstartup.sh
+mv ./azuresecurity.sh /config/azuresecurity.sh
+chmod u+x /config/azuresecurity.sh
+#bash /config/azuresecurity.sh
