@@ -31,18 +31,11 @@
         "description": "The data center you want to install this WAF into."
       }
     },
-    "numberOfWAFs": {
-      "type": "int",
-      "defaultValue": 2,
-      "metadata": {
-        "description": "The number of WAF's to deploy infront of your application."
-      }
-    },
-    "wafNamePrefix": {
+    "vmName": {
       "type": "string",
       "defaultValue": "newWAFName",
       "metadata": {
-        "description": "The name prefix to be used for the WAF's."
+        "description": "The name of this BIG-IP"
       }
     },
     "vmSize": {
@@ -469,7 +462,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('wafNamePrefix')]",
+      "name": "[parameters('vmName')]",
       "location": "[parameters('location')]",
       "tags": {
         "displayName": "VirtualMachine"
@@ -492,7 +485,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[parameters('wafNamePrefix')]",
+          "computerName": "[parameters('vmName')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -538,11 +531,11 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('wafNamePrefix'),'/start')]",
+      "name": "[concat(parameters('vmName'),'/start')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/',parameters('wafNamePrefix'))]"
+        "[concat('Microsoft.Compute/virtualMachines/',parameters('vmName'))]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -553,7 +546,7 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/blackboxstartup.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ',parameters('wafNamePrefix'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
+          "commandToExecute": "[concat('bash start.sh ',parameters('vmName'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
         }
       }
     }
