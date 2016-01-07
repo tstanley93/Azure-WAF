@@ -554,8 +554,8 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/blackboxstartup.sh",
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/master/start.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/blackboxstartup.sh",
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"
           ],
           "commandToExecute": "[concat('bash start.sh ',parameters('wafNamePrefix'),';',parameters('ipAddress'),';',parameters('adminPassword'),';',parameters('licenseToken'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
         }
