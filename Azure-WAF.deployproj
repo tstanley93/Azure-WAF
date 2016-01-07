@@ -26,7 +26,7 @@
   <!-- vertag<:>end -->
   <ItemGroup>
     <None Include="azuredeploy.json" />
-    <None Include="blackbox.conf" />
+    <None Include="azuresecurity.sh" />
     <None Include="blackbox.txt" />
     <None Include="blackboxstartup.sh" />
     <None Include="blackbox_check.json" />
@@ -34,6 +34,7 @@
       <Visible>False</Visible>
     </None>
     <None Include="HTMLPage1.html" />
+    <None Include="new-blackbox.conf" />
     <None Include="README.md" />
     <None Include="start.sh" />
   </ItemGroup>
