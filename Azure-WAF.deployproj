@@ -27,14 +27,12 @@
   <ItemGroup>
     <None Include="azuredeploy.json" />
     <None Include="azuresecurity.sh" />
-    <None Include="blackbox.txt" />
-    <None Include="blackboxstartup.sh" />
     <None Include="blackbox_check.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
     <None Include="HTMLPage1.html" />
-    <None Include="new-blackbox.conf" />
+    <None Include="blackbox.conf" />
     <None Include="README.md" />
     <None Include="start.sh" />
   </ItemGroup>
