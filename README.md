@@ -1,7 +1,7 @@
 # Azure-WAF
 Deploy F5 WAF Solution in Azure  
 
-This will create a new resource group, and inside will configure the following;
+This will create a new resource group, and inside this new resource group it will configure the following;
 
 * Availability Set
 * Azure Load Balancer
