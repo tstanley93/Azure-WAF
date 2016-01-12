@@ -168,7 +168,7 @@
     "availabilitySetName": "[concat(parameters('dnsNameForPublicIP'),'-avset')]",
     "newStorageAccountName": "[concat(parameters('dnsNameForPublicIP'),'stor')]",
     "wafNamePrefix": "[concat(parameters('dnsNameForPublicIP'),'-waf')]",
-    "nsgID": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('dnsNameForPublicIP'),'-nsg')]",
+    "nsgID": "[resourceId('Microsoft.Network/networkSecurityGroups/',parameters('dnsNameForPublicIP'),'-nsg')]",
     "lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/loadBalancerFrontEnd')]",
     "guiMgtID": "[concat(variables('lbID'),'/inboundNatRules/guimgt')]",
@@ -238,7 +238,7 @@
       },
       "properties": {
         "networkSecurityGroup": {
-          "id": "[variables('nsgId')]"
+          "id": "[variables('nsgID')]"
         },
         "ipConfigurations": [
           {
