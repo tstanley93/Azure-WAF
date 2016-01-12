@@ -1,19 +1,28 @@
 ﻿{
   "loadbalance": {
-    "is_master": "true",
-    "master_hostname": "",
-    "master_address": "",
+    "is_master": "false",
+    "master_hostname": "romewaf04-waf0",
+    "master_address": "10.10.1.4",
     "master_password": "Junct10n",
-    "device_hostname": "romewaf13WAF",
-    "device_address": "10.10.1.50",
+    "device_hostname": "romewaf04-waf1",
+    "device_address": "10.10.1.5",
     "device_password": "Junct10n"
+  },
+  "logging": {
+    "saskey": "tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=",
+    "saskeyname": "sharing-is-caring",
+    "eventhub": "event-horizon",
+    "eventhub_namespace": "event-horizon-ns",
+    "logginglevel": "Alert",
+    "loggingtemplate": "CEF",
+    "applianceid": "8A3ED335-F734-449F-A8FB-335B48FE3B50"
   },
   "bigip": {
     "application_name": "Azure Security F5 WAF",
     "ntp_servers": "1.pool.ntp.org 2.pool.ntp.org",
     "ssh_key_inject": "false",
     "change_passwords": "false",
-    "license": { "basekey": "ZQTMG-JGCOX-IJDQQ-YHYWY-TNRZSFU" },
+    "license": { "basekeyfile": "/tmp/bigip.license" },
     "modules": {
       "auto_provision": "true",
       "ltm": "nominal",
@@ -23,21 +32,13 @@
     "redundancy": { "provision": "false" },
     "network": { "provision": "false" },
     "iappconfig": {
-      "f5.rome_waf": {
-        "template_location": "http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf.tmpl",
+      "f5.rome_waf_rc": {
+        "template_location": "http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf_rc.tmpl",
         "deployments": {
-          "deployment_romeapp21.WestUS.cloudapp.azure.com": {
+          "deployment_myAppName.WestUS.cloudapp.azure.com": {
             "traffic-group": "none",
             "strict-updates": "disabled",
-            "variables": {
-              "configuration__saskey": "tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=",
-              "configuration__saskeyname": "sharing-is-caring",
-              "configuration__eventhub": "event-horizon",
-              "configuration__eventhub_namespace": "event-horizon-ns",
-              "configuration__applianceid": "8A3ED335-F734-449F-A8FB-335B48FE3B50",
-              "configuration__logginglevel": "Alert",
-              "configuration__loggingtemplate": "CEF"
-            },
+            "variables": { },
             "tables": {
               "configuration__destination": {
                 "column-names": [ "port", "mode", "backendmembers", "monitoruser", "monitorpass", "monitoruri", "monitorexpect", "asmtemplate", "asmapptype", "asmlevel", "l7ddos", "ipintel", "caching", "tcpoptmode", "fqdns", "oneconnect", "sslpkcs12", "sslpassphrase", "sslcert", "sslkey", "sslchain" ],
@@ -45,7 +46,7 @@
                   "1": [
                     "880",
                     "http",
-                    [ "40.78.109.149:80" ],
+                    [ "10.0.0.1:80" ],
                     "",
                     "",
                     "",
@@ -57,7 +58,7 @@
                     "yes",
                     "yes",
                     "wanlan",
-                    "romewaf13.eisconsult.com",
+                    "www.contoso.com",
                     "yes",
                     "",
                     "",
@@ -68,7 +69,7 @@
                   "2": [
                     "8444",
                     "https",
-                    [ "40.78.109.149:443" ],
+                    [ "10.0.0.1:443" ],
                     "",
                     "",
                     "",
@@ -80,7 +81,7 @@
                     "yes",
                     "yes",
                     "wanlan",
-                    "romewaf13.eisconsult.com",
+                    "www.contoso.com",
                     "yes",
                     "",
                     "",

@@ -63,7 +63,7 @@ jsonfile='{"loadbalance":{"is_master":"'${devicearr[0]}'","master_hostname":"'${
 echo $jsonfile > /config/blackbox.conf
 
 ## Create a file with the license token in it.
-echo ${devicearr[3]} > /tmp/bigip.license
+echo ${devicearr[4]} > /tmp/bigip.license
 
 ## Move the files and run them.
 mv ./azuresecurity.sh /config/azuresecurity.sh
