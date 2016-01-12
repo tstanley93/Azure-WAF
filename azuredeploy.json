@@ -395,7 +395,7 @@
         "count": "[parameters('numberOFWAFs')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/loadBalancers/', variables('lbid'))]"
+        "[concat('Microsoft.Network/loadBalancers', variables('lbid'))]"
       ],
       "properties": {
         "frontendIPConfiguration": {
@@ -417,7 +417,7 @@
         "count": "[parameters('numberOFWAFs')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/loadBalancers/', variables('lbid'))]"
+        "[concat('Microsoft.Network/loadBalancers', variables('lbid'))]"
       ],
       "properties": {
         "frontendIPConfiguration": {
