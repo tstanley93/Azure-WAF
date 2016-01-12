@@ -387,8 +387,8 @@
     },
     {
       "apiVersion": "2015-06-15",
-      "type": "[concat('Microsoft.Network/loadBalancers/',variables('loadBalancerName'),'/inboundNatRules')]",
-      "name": "[concat('guimgt', copyIndex())]",
+      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "name": "[concat(variables('loadBalancerName'),'/guimgt', copyIndex())]",
       "location": "[parameters('location')]",
       "copy": {
         "name": "lbNatLoop",
@@ -410,7 +410,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
-      "name": "[concat('sshmgt', copyIndex())]",
+      "name": "[concat(variables('loadBalancerName'),'/sshmgt', copyIndex())]",
       "location": "[parameters('location')]",
       "copy": {
         "name": "lbNatLoop",
