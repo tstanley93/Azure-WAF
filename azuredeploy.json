@@ -179,10 +179,10 @@
     "subnetName": "[concat(parameters('dnsNameForPublicIP'),'-subNet')]",
     "subnetPrefix": "10.10.1.0/24",
     "ipAddress": "10.10.1.",
-    "nicNamePrefix": "[concat(parameters('dnsNameForPublicIP'),'-NIC')]",
-    "loadBalancerName": "[concat(parameters('dnsNameForPublicIP'),'-ALB')]",
-    "availabilitySetName": "[concat(parameters('dnsNameForPublicIP'),'-AVSet')]",
-    "newStorageAccountName": "[concat(parameters('dnsNameForPublicIP'),'-Storage')]",
+    "nicNamePrefix": "[concat(parameters('dnsNameForPublicIP'),'-nic')]",
+    "loadBalancerName": "[concat(parameters('dnsNameForPublicIP'),'-alb')]",
+    "availabilitySetName": "[concat(parameters('dnsNameForPublicIP'),'-avset')]",
+    "newStorageAccountName": "[concat(parameters('dnsNameForPublicIP'),'stor')]",
     "wafNamePrefix": "[concat(parameters('dnsNameForPublicIP'),'-WAF')]",
     "lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/loadBalancerFrontEnd')]",
@@ -265,10 +265,10 @@
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(variables('lbID'), '/inboundNatRules/', 'guimgt')]"
+                  "id": "[concat(variables('lbID'), '/inboundNatRules/', 'guimgt',copyIndex())]"
                 },
                 {
-                  "id": "[concat(variables('lbID'), '/inboundNatRules/', 'sshmgt')]"
+                  "id": "[concat(variables('lbID'), '/inboundNatRules/', 'sshmgt',copyIndex())]"
                 }
               ]
             }
@@ -381,35 +381,53 @@
             },
             "name": "lbprobe"
           }
-        ],
-        "inboundNatRules": [
-          {
-            "name": "guimgt",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 8443,
-              "backendPort": 443,
-              "enableFloatingIP": false
-            }
-          },
-          {
-            "name": "sshmgt",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPort": 8022,
-              "backendPort": 22,
-              "enableFloatingIP": false
-            }
-          }
         ]
       },
       "type": "Microsoft.Network/loadBalancers"
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "name": "[concat('guimgt', copyIndex())]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "lbNatLoop",
+        "count": "[parameters('numberOFWAFs')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/loadBalancers/', variables('lbid'))]"
+      ],
+      "properties": {
+        "frontendIPConfiguration": {
+          "id": "[variables('frontEndIPConfigID')]"
+        },
+        "protocol": "tcp",
+        "frontendPort": "[copyIndex(8443)]",
+        "backendPort": 443,
+        "enableFloatingIP": false
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "name": "[concat('sshmgt', copyIndex())]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "lbNatLoop",
+        "count": "[parameters('numberOFWAFs')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/loadBalancers/', variables('lbid'))]"
+      ],
+      "properties": {
+        "frontendIPConfiguration": {
+          "id": "[variables('frontEndIPConfigID')]"
+        },
+        "protocol": "tcp",
+        "frontendPort": "[copyIndex(8022)]",
+        "backendPort": 22,
+        "enableFloatingIP": false
+      }
     },
     {
       "apiVersion": "2015-06-15",
