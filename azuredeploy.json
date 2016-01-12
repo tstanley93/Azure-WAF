@@ -387,7 +387,7 @@
     },
     {
       "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+      "type": "[concat('Microsoft.Network/loadBalancers/',variables('loadBalancerName'),'/inboundNatRules')]",
       "name": "[concat('guimgt', copyIndex())]",
       "location": "[parameters('location')]",
       "copy": {
