@@ -63,15 +63,6 @@
         "description": "Unique DNS Name for the Public IP used to access the Web Application Firewalls for management."
       }
     },
-    "storType": {
-      "type": "string",
-      "defaultValue": "Standard_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Standard_GRS",
-        "Standard_ZRS"
-      ]
-    },
     "licenseToken1": {
       "type": "string",
       "defaultValue": "BYOL-Key-From-F5-1",
@@ -86,42 +77,35 @@
         "description": "The License Token for the BYOL F5 Web Application Firewall."
       }
     },
-    "appName": {
+    "applicationName": {
       "type": "string",
       "defaultValue": "myAppName",
       "metadata": {
         "description": "Please provide a name for your application."
       }
     },
-    "wafPorts": {
-      "type": "string",
-      "defaultValue": "880;8444",
-      "metadata": {
-        "description": "Semi-Colon separated list of ports (880;8440) that will be used to configure the WAF VIP's, (e.g. 880 for port 80 and 8444 for port 443)."
-      }
-    },
-    "protocols": {
+    "applicationProtocols": {
       "type": "string",
       "defaultValue": "http;https",
       "metadata": {
         "description": "Semi-Colon separated list of protocols (http;https) that will be used to configure the WAF VIP's, (e.g. http for port 80 and https for SSL)."
       }
     },
-    "appAddress": {
+    "applicationAddress": {
       "type": "string",
       "defaultValue": "10.0.0.1",
       "metadata": {
         "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
       }
     },
-    "appPorts": {
+    "applicationPorts": {
       "type": "string",
       "defaultValue": "80;443",
       "metadata": {
         "description": "Semi-Colon separated list of ports for the application (80;443) these are the ports that your applicaiton is listening on, (e.g. 80 and 443)."
       }
     },
-    "appType": {
+    "applicationType": {
       "type": "string",
       "metadata": {
         "description": "Is your application running on a Linux OS or a Windows OS?"
@@ -144,28 +128,28 @@
         "High"
       ]
     },
-    "appFQDN": {
+    "applicationFQDN": {
       "type": "string",
       "defaultValue": "www.contoso.com",
       "metadata": {
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
     },
-    "appCertificate": {
+    "applicationCertificate": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "Please paste in the SSL Certificate. (Optional)"
       }
     },
-    "appKey": {
+    "applicationKey": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "Please paste in the SSL Key. (Optional)"
       }
     },
-    "appChain": {
+    "applicationChain": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
@@ -184,6 +168,7 @@
     "availabilitySetName": "[concat(parameters('dnsNameForPublicIP'),'-avset')]",
     "newStorageAccountName": "[concat(parameters('dnsNameForPublicIP'),'stor')]",
     "wafNamePrefix": "[concat(parameters('dnsNameForPublicIP'),'-waf')]",
+    "nsgID": "[resourceId('Microsoft.Network/networkSecurityGroups',parameters('dnsNameForPublicIP'),'-nsg')]",
     "lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/loadBalancerFrontEnd')]",
     "guiMgtID": "[concat(variables('lbID'),'/inboundNatRules/guimgt')]",
@@ -244,13 +229,17 @@
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]",
         "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'),'/inboundNatRules/guimgt',copyindex())]",
-        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'),'/inboundNatRules/sshmgt',copyindex())]"
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'),'/inboundNatRules/sshmgt',copyindex())]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('dnsNameForPublicIP'),'-nsg')]"
       ],
       "copy": {
         "count": "[parameters('numberOFWAFs')]",
         "name": "niccopy"
       },
       "properties": {
+        "networkSecurityGroup": {
+          "id": "[variables('nsgId')]"
+        },
         "ipConfigurations": [
           {
             "name": "ipconfig1",
@@ -286,7 +275,7 @@
       "properties": {
         "securityRules": [
           {
-            "name": "ssl_rule",
+            "name": "mgt_rule",
             "properties": {
               "description": "",
               "priority": 101,
@@ -300,28 +289,42 @@
             }
           },
           {
-            "name": "http_rule",
+            "name": "ssh_rule",
             "properties": {
               "description": "",
               "priority": 102,
               "sourceAddressPrefix": "*",
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
-              "destinationPortRange": "80",
+              "destinationPortRange": "22",
               "protocol": "TCP",
               "direction": "Inbound",
               "access": "Allow"
             }
           },
           {
-            "name": "ssh_rule",
+            "name": "app_rule_880",
             "properties": {
               "description": "",
               "priority": 103,
               "sourceAddressPrefix": "*",
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
-              "destinationPortRange": "22",
+              "destinationPortRange": "880",
+              "protocol": "TCP",
+              "direction": "Inbound",
+              "access": "Allow"
+            }
+          },
+          {
+            "name": "app_rule_8444",
+            "properties": {
+              "description": "",
+              "priority": 104,
+              "sourceAddressPrefix": "*",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "*",
+              "destinationPortRange": "8444",
               "protocol": "TCP",
               "direction": "Inbound",
               "access": "Allow"
@@ -508,7 +511,7 @@
       "location": "[parameters('location')]",
       "apiVersion": "2015-05-01-preview",
       "properties": {
-        "accountType": "[parameters('storType')]"
+        "accountType": "Standard_LRS"
       }
     },
     {
@@ -528,7 +531,7 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/azuresecurity.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',parameters('appName'),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain'))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',parameters('applicationName'),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(parameters('location'),' ',''),' ',parameters('applicationPorts'),' ',parameters('applicationType'),';',parameters('blockingLevel'),';',parameters('applicationFQDN'),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'))]"
         }
       }
     },
@@ -553,7 +556,7 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/azuresecurity.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',parameters('licenseToken2'),';',parameters('appName'),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' ',parameters('wafPorts'),' ',parameters('protocols'),' ',parameters('appAddress'),';',replace(parameters('location'),' ',''),' ',parameters('appPorts'),' ',parameters('appType'),';',parameters('blockingLevel'),';',parameters('appFQDN'),';',parameters('appCertificate'),';',parameters('appKey'),';',parameters('appChain')))]"
+          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',parameters('licenseToken2'),';',parameters('applicationName'),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(parameters('location'),' ',''),' ',parameters('applicationPorts'),' ',parameters('applicationType'),';',parameters('blockingLevel'),';',parameters('applicationFQDN'),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain')))]"
         }
       }
     }
