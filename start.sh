@@ -40,9 +40,9 @@
 ## asmarr=0 # linux or windows
 ## asmarr=1 #blocking level, high medium low
 ## asmarr=2 #fqdn for the application
-## asmarr=3 #secure string of SSL certificate file
-## asmarr=4 #secure string of SSL key file
-## asmarr=5 #secure string of SSL chain file
+## asmarr=3 #secure string of SSL certificate file path
+## asmarr=4 #secure string of SSL key file path
+## asmarr=5 #secure string of SSL chain file path
 
 ## Build the arrays based on the semicolon delimited command line argument passed from json template.
 IFS=';' read -ra devicearr <<< "$1"    
@@ -50,11 +50,46 @@ IFS=';' read -ra vipportarr <<< "$2"
 IFS=';' read -ra protocolarr <<< "$3"    
 IFS=';' read -ra hostarr <<< "$4"    
 IFS=';' read -ra appportarr <<< "$5"    
-IFS=';' read -ra asmarr <<< "$6"    
+IFS=';' read -ra asmarr <<< "$6"
+
+certfilename= ""
+keyfilename= ""
+chainfilename= ""
+
+## Get certificate file if it was supplied.
+if [ ${asmarr[3]} != null ]
+then
+	IFS='/' read -ra local patharr <<< ${asmarr[3]}
+	local length=${#patharr[@]}
+	local lastposition=$((length - 1))
+	certfilename=${patharr[${lastposition}]}
+	wget ${asmarr[3]}
+fi
+
+## Get key file if it was supplied.
+if [ ${asmarr[4]} != null ]
+then
+	IFS='/' read -ra local patharr <<< ${asmarr[4]}
+	local length=${#patharr[@]}
+	local lastposition=$((length - 1))
+	keyfilename=${patharr[${lastposition}]}
+	wget ${asmarr[4]}
+fi
+
+## Get chain file if it was supplied.
+if [ ${asmarr[5]} != null ]
+then
+	IFS='/' read -ra local patharr <<< ${asmarr[5]}
+	local length=${#patharr[@]}
+	local lastposition=$((length - 1))
+	chainfilename=${patharr[${lastposition}]}
+	wget ${asmarr[5]}
+fi
+
 
 ## Construct the blackbox.conf file using the arrays.
 row1='"1":["'${vipportarr[0]}'","'${protocolarr[0]}'",["'${hostarr[0]}':'${appportarr[0]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","","",""]'
-row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}':'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","'${asmarr[3]}'","'${asmarr[4]}'","'${asmarr[5]}'"]'
+row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}':'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","'${certfilename}'","'${keyfilename}'","'${chainfilename}'"]'
 
 deployment1='deployment_'${devicearr[5]}'.'${hostarr[1]}'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{},"tables":{"configuration__destination":{"column-names":["port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos","ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1','$row2'}}}}'
 
@@ -67,5 +102,15 @@ echo ${devicearr[4]} > /tmp/bigip.license
 
 ## Move the files and run them.
 mv ./azuresecurity.sh /config/azuresecurity.sh
+if [ ${certfilename} != "" ]
+then
+	mv ./${certfilename} /config/${certfilename}
+fi
+if [ ${keyfilename} != "" ]
+	mv ./${keyfilename} /config/${keyfilename}
+fi
+if [ ${chainilename} != "" ]
+	mv ./${chainfilename} /config/${chainfilename}
+fi
 chmod u+x /config/azuresecurity.sh
 #bash /config/azuresecurity.sh

@@ -64,30 +64,44 @@
       }
     },
     "licenseToken1": {
-      "type": "array",      
+      "type": "string",
       "metadata": {
-        "description": "The License Token for the BYOL F5 Web Application Firewall."
+        "description": "The License Token for the first BYOL F5 Web Application Firewall."
       }
     },
     "licenseToken2": {
       "type": "string",
-      "defaultValue": "BYOL-Key-From-F5-2",
+      "defaultValue": "",
       "metadata": {
-        "description": "The License Token for the BYOL F5 Web Application Firewall."
+        "description": "(Optional) The License Token for the second BYOL F5 Web Application Firewall if applicablbe."
+      }
+    },
+    "licenseToken3": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "(Optional) The License Token for the third BYOL F5 Web Application Firewall if applicablbe."
+      }
+    },
+    "licenseToken4": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "(Optional) The License Token for the fourth BYOL F5 Web Application Firewall if applicablbe."
       }
     },
     "applicationName": {
       "type": "string",
       "defaultValue": "myAppName",
       "metadata": {
-        "description": "Please provide a name for your application."
+        "description": "Please provide a simple name for your application."
       }
     },
     "applicationProtocols": {
       "type": "string",
       "defaultValue": "http;https",
       "metadata": {
-        "description": "Semi-Colon separated list of protocols (http;https) that will be used to configure the WAF VIP's, (e.g. http for port 80 and https for SSL)."
+        "description": "A semi-colon separated list of protocols (http;https) that will be used to configure the WAF's VIP's, (e.g. http for port 80 and https for SSL)."
       }
     },
     "applicationAddress": {
@@ -100,7 +114,7 @@
       "type": "string",
       "defaultValue": "80;443",
       "metadata": {
-        "description": "Semi-Colon separated list of ports for the application (80;443) these are the ports that your applicaiton is listening on, (e.g. 80 and 443)."
+        "description": "A semi-colon separated list of ports, (80;443) that your applicaiton is listening on, (e.g. 80 and 443)."
       }
     },
     "applicationType": {
@@ -117,7 +131,7 @@
     "blockingLevel": {
       "type": "string",
       "metadata": {
-        "description": "Please select how aggressive you would like the blocking level of this WAF.  The more aggressive the blocking level, the more potential false-positives the WAF may detect."
+        "description": "Please select how aggressive you would like the blocking level of this WAF to be.  Remember that the more aggressive the blocking level, the more potential there is for false-positives that the WAF might detect."
       },
       "defaultValue": "Medium",
       "allowedValues": [
@@ -137,21 +151,21 @@
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Please paste in the SSL Certificate. (Optional)"
+        "description": "The path to the SSL certificate file. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Please paste in the SSL Key. (Optional)"
+        "description": "The path to the SSL key file. (Optional)"
       }
     },
     "applicationChain": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Please paste in the SSL Chain. (Optional)"
+        "description": "The path to the SSL chain file. (Optional)"
       }
     }
   },
@@ -527,7 +541,7 @@
         "settings": {
           "fileUris": [
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/azuresecurity.sh",
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"         
           ],
           "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',parameters('applicationName'),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(parameters('location'),' ',''),' ',parameters('applicationPorts'),' ',parameters('applicationType'),';',parameters('blockingLevel'),';',parameters('applicationFQDN'),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'))]"
         }
