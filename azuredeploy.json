@@ -64,8 +64,7 @@
       }
     },
     "licenseToken1": {
-      "type": "string",
-      "defaultValue": "BYOL-Key-From-F5-1",
+      "type": "array",      
       "metadata": {
         "description": "The License Token for the BYOL F5 Web Application Firewall."
       }
