@@ -59,7 +59,8 @@ chainfilename= ""
 ## Get certificate file if it was supplied.
 if [ ${asmarr[3]} != "" ]
 then
-	IFS='/' read -ra certpatharr <<< ${asmarr[3]}
+	certpath=${asmarr[3]}
+	IFS='/' read -a certpatharr <<< "$certpath"
 	certlength=${#certpatharr[@]}
 	certlastposition=$((certlength - 1))
 	certfilename=${certpatharr[${certlastposition}]}
@@ -69,9 +70,10 @@ fi
 ## Get key file if it was supplied.
 if [ ${asmarr[4]} != "" ]
 then
-	IFS='/' read -ra keypatharr <<< ${asmarr[4]}
+	keypath=${asmarr[4]}
+	IFS='/' read -ra keypatharr <<< "$keypath"
 	keylength=${#keypatharr[@]}
-	keylastposition=$(key(length - 1))
+	keylastposition=$((keylength - 1))
 	keyfilename=${keypatharr[${keylastposition}]}
 	curl -kO ${asmarr[4]}
 fi
@@ -79,7 +81,8 @@ fi
 ## Get chain file if it was supplied.
 if [ ${asmarr[5]} != "" ]
 then
-	IFS='/' read -ra chainpatharr <<< ${asmarr[5]}
+	chainpath=${asmarr[5]}
+	IFS='/' read -ra chainpatharr <<< "$chainpath"
 	chainlength=${#chainpatharr[@]}
 	chainlastposition=$((chainlength - 1))
 	chainfilename=${chainpatharr[${chainlastposition}]}
