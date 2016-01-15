@@ -110,15 +110,15 @@ echo ${devicearr[4]} > /tmp/bigip.license
 mv ./azuresecurity.sh /config/azuresecurity.sh
 if [ "$certfilename" != "" ]
 then
-	mv ./"$certfilename" /config/"$certfilename"
+	mv ./"$certfilename" /config/ssl/"$certfilename"
 fi
 if [ "$keyfilename" != "" ]
 then
-	mv ./"$keyfilename" /config/"$keyfilename"
+	mv ./"$keyfilename" /config/ssl/"$keyfilename"
 fi
 if [ "$chainilename" != "" ]
 then
-	mv ./"$chainfilename" /config/"$chainfilename"
+	mv ./"$chainfilename" /config/ssl/"$chainfilename"
 fi
 chmod u+x /config/azuresecurity.sh
 #bash /config/azuresecurity.sh
