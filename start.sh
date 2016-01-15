@@ -65,6 +65,7 @@ then
 	certlastposition=$((certlength - 1))
 	certfilename=${certpatharr[${certlastposition}]}
 	curl -kO ${asmarr[3]}
+	certpath="file::/config/ssl/""$certfilename"
 fi
 
 ## Get key file if it was supplied.
@@ -76,6 +77,7 @@ then
 	keylastposition=$((keylength - 1))
 	keyfilename=${keypatharr[${keylastposition}]}
 	curl -kO ${asmarr[4]}
+	keypath="file::/config/ssl/""$keyfilename"
 fi
 
 ## Get chain file if it was supplied.
@@ -87,12 +89,13 @@ then
 	chainlastposition=$((chainlength - 1))
 	chainfilename=${chainpatharr[${chainlastposition}]}
 	curl -kO ${asmarr[5]}
+	chainpath="file::/config/ssl/""$chainfilename"
 fi
 
 
 ## Construct the blackbox.conf file using the arrays.
 row1='"1":["'${vipportarr[0]}'","'${protocolarr[0]}'",["'${hostarr[0]}':'${appportarr[0]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","","",""]'
-row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}':'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","'${certfilename}'","'${keyfilename}'","'${chainfilename}'"]'
+row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}':'${appportarr[1]}'"],"","","","","","'${asmarr[0]}'","'${asmarr[1]}'","yes","yes","yes","wanlan","'${asmarr[2]}'","yes","","","'${certpath}'","'${keypath}'","'${chainpath}'"]'
 
 deployment1='deployment_'${devicearr[5]}'.'${hostarr[1]}'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{},"tables":{"configuration__destination":{"column-names":["port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos","ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1','$row2'}}}}'
 
