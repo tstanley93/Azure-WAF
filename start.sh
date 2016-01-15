@@ -57,33 +57,33 @@ keyfilename= ""
 chainfilename= ""
 
 ## Get certificate file if it was supplied.
-if [ ${asmarr[3]} != null ]
+if [ "$asmarr[3]" != "" ]
 then
 	IFS='/' read -ra certpatharr <<< ${asmarr[3]}
 	certlength=${#certpatharr[@]}
 	certlastposition=$((length - 1))
 	certfilename=${certpatharr[${lastposition}]}
-	curl -kO ${asmarr[3]}
+	curl -kO "$asmarr[3]"
 fi
 
 ## Get key file if it was supplied.
-if [ ${asmarr[4]} != null ]
+if [ "$asmarr[4]" != "" ]
 then
 	IFS='/' read -ra keypatharr <<< ${asmarr[4]}
 	keylength=${#keypatharr[@]}
 	keylastposition=$((length - 1))
 	keyfilename=${keypatharr[${lastposition}]}
-	curl -kO ${asmarr[4]}
+	curl -kO "$asmarr[4]"
 fi
 
 ## Get chain file if it was supplied.
-if [ ${asmarr[5]} != null ]
+if [ "$asmarr[5]" != "" ]
 then
 	IFS='/' read -ra chainpatharr <<< ${asmarr[5]}
 	chainlength=${#chainpatharr[@]}
 	chainlastposition=$((length - 1))
 	chainfilename=${chainpatharr[${lastposition}]}
-	curl -kO ${asmarr[5]}
+	curl -kO "$asmarr[5]"
 fi
 
 
@@ -102,15 +102,17 @@ echo ${devicearr[4]} > /tmp/bigip.license
 
 ## Move the files and run them.
 mv ./azuresecurity.sh /config/azuresecurity.sh
-if [ ${certfilename} != "" ]
+if [ "$certfilename" != "" ]
 then
-	mv ./${certfilename} /config/${certfilename}
+	mv ./"$certfilename" /config/"$certfilename"
 fi
-if [ ${keyfilename} != "" ]
-	mv ./${keyfilename} /config/${keyfilename}
+if [ "$keyfilename" != "" ]
+then
+	mv ./"$keyfilename" /config/"$keyfilename"
 fi
-if [ ${chainilename} != "" ]
-	mv ./${chainfilename} /config/${chainfilename}
+if [ "$chainilename" != "" ]
+then
+	mv ./"$chainfilename" /config/"$chainfilename"
 fi
 chmod u+x /config/azuresecurity.sh
 #bash /config/azuresecurity.sh
