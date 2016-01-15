@@ -63,7 +63,7 @@ then
 	certlength=${#certpatharr[@]}
 	certlastposition=$((length - 1))
 	certfilename=${certpatharr[${lastposition}]}
-	wget ${asmarr[3]}
+	curl -kO ${asmarr[3]}
 fi
 
 ## Get key file if it was supplied.
@@ -73,7 +73,7 @@ then
 	keylength=${#keypatharr[@]}
 	keylastposition=$((length - 1))
 	keyfilename=${keypatharr[${lastposition}]}
-	wget ${asmarr[4]}
+	curl -kO ${asmarr[4]}
 fi
 
 ## Get chain file if it was supplied.
@@ -83,7 +83,7 @@ then
 	chainlength=${#chainpatharr[@]}
 	chainlastposition=$((length - 1))
 	chainfilename=${chainpatharr[${lastposition}]}
-	wget ${asmarr[5]}
+	curl -kO ${asmarr[5]}
 fi
 
 
