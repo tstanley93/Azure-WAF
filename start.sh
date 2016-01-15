@@ -59,30 +59,30 @@ chainfilename= ""
 ## Get certificate file if it was supplied.
 if [ ${asmarr[3]} != null ]
 then
-	IFS='/' read -ra local patharr <<< ${asmarr[3]}
-	local length=${#patharr[@]}
-	local lastposition=$((length - 1))
-	certfilename=${patharr[${lastposition}]}
+	IFS='/' read -ra certpatharr <<< ${asmarr[3]}
+	certlength=${#certpatharr[@]}
+	certlastposition=$((length - 1))
+	certfilename=${certpatharr[${lastposition}]}
 	wget ${asmarr[3]}
 fi
 
 ## Get key file if it was supplied.
 if [ ${asmarr[4]} != null ]
 then
-	IFS='/' read -ra local patharr <<< ${asmarr[4]}
-	local length=${#patharr[@]}
-	local lastposition=$((length - 1))
-	keyfilename=${patharr[${lastposition}]}
+	IFS='/' read -ra keypatharr <<< ${asmarr[4]}
+	keylength=${#keypatharr[@]}
+	keylastposition=$((length - 1))
+	keyfilename=${keypatharr[${lastposition}]}
 	wget ${asmarr[4]}
 fi
 
 ## Get chain file if it was supplied.
 if [ ${asmarr[5]} != null ]
 then
-	IFS='/' read -ra local patharr <<< ${asmarr[5]}
-	local length=${#patharr[@]}
-	local lastposition=$((length - 1))
-	chainfilename=${patharr[${lastposition}]}
+	IFS='/' read -ra chainpatharr <<< ${asmarr[5]}
+	chainlength=${#chainpatharr[@]}
+	chainlastposition=$((length - 1))
+	chainfilename=${chainpatharr[${lastposition}]}
 	wget ${asmarr[5]}
 fi
 
