@@ -121,4 +121,4 @@ then
 	mv ./"$chainfilename" /config/ssl/"$chainfilename"
 fi
 chmod u+x /config/azuresecurity.sh
-#bash /config/azuresecurity.sh
+bash /config/azuresecurity.sh
