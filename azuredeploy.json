@@ -576,11 +576,11 @@
   "outputs": {
     "GUI-URL": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443',' Increment Port number for additional BIG-IP Devices.')]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443')]"
     },
     "SSH-URL": {
       "type": "string",
-      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',8022,' Increment Port number for additional BIG-IP Devices.')]"
+      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',8022)]"
     }
   }
 }
