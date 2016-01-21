@@ -8,7 +8,7 @@
 ## fff       f  f5555555             Written By: EIS Consulting          ##
 ## f        ff  f5555555                                                 ##
 ## fff   ffff       f555             Date Created: 12/02/2015            ##
-## fff    fff5555    555             Last Updated: 12/02/2015            ##
+## fff    fff5555    555             Last Updated: 01/21/2016            ##
 ##  ff    fff 55555  55                                                  ##
 ##   f    fff  555   5       This script will start the pre-configured   ##
 ##   f    fff       55       WAF configuration.                          ##
@@ -65,7 +65,7 @@ then
 	certlastposition=$((certlength - 1))
 	certfilename=${certpatharr[${certlastposition}]}
 	curl -kO ${asmarr[3]}
-	certpath="file::/config/ssl/'$certfilename'"
+	certpath="file::/config/ssl/$certfilename"
 fi
 
 ## Get key file if it was supplied.
@@ -77,7 +77,7 @@ then
 	keylastposition=$((keylength - 1))
 	keyfilename=${keypatharr[${keylastposition}]}
 	curl -kO ${asmarr[4]}
-	keypath="file::/config/ssl/'$keyfilename'"
+	keypath="file::/config/ssl/$keyfilename"
 fi
 
 ## Get chain file if it was supplied.
@@ -89,7 +89,7 @@ then
 	chainlastposition=$((chainlength - 1))
 	chainfilename=${chainpatharr[${chainlastposition}]}
 	curl -kO ${asmarr[5]}
-	chainpath="file::/config/ssl/'$chainfilename'"
+	chainpath="file::/config/ssl/$chainfilename"
 fi
 
 
