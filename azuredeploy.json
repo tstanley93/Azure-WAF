@@ -543,7 +543,7 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/azuresecurity.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"         
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',parameters('applicationName'),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(parameters('location'),' ',''),' ',parameters('applicationPorts'),' ',parameters('applicationType'),';',parameters('blockingLevel'),';',parameters('applicationFQDN'),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'))]"
         }
       }
     },
@@ -568,19 +568,19 @@
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/azuresecurity.sh",
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',parameters('licenseToken2'),';',parameters('applicationName'),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(parameters('location'),' ',''),' ',parameters('applicationPorts'),' ',parameters('applicationType'),';',parameters('blockingLevel'),';',parameters('applicationFQDN'),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain')))]"
+          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',parameters('licenseToken2'),';',toLower(parameters('applicationName')),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain')))]"
         }
       }
     }
   ],
   "outputs": {
-    "siteUri": {
+    "GUI-URL": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443')]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443',' Increment Port number for additional BIG-IP Devices.')]"
     },
-    "sshUri": {
+    "SSH-URL": {
       "type": "string",
-      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',8022)]"
+      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',8022,' Increment Port number for additional BIG-IP Devices.')]"
     }
   }
 }

@@ -65,7 +65,7 @@ then
 	certlastposition=$((certlength - 1))
 	certfilename=${certpatharr[${certlastposition}]}
 	curl -kO ${asmarr[3]}
-	certpath="file::/config/ssl/""$certfilename"
+	certpath="file::/config/ssl/'$certfilename'"
 fi
 
 ## Get key file if it was supplied.
@@ -77,7 +77,7 @@ then
 	keylastposition=$((keylength - 1))
 	keyfilename=${keypatharr[${keylastposition}]}
 	curl -kO ${asmarr[4]}
-	keypath="file::/config/ssl/""$keyfilename"
+	keypath="file::/config/ssl/'$keyfilename'"
 fi
 
 ## Get chain file if it was supplied.
@@ -89,7 +89,7 @@ then
 	chainlastposition=$((chainlength - 1))
 	chainfilename=${chainpatharr[${chainlastposition}]}
 	curl -kO ${asmarr[5]}
-	chainpath="file::/config/ssl/""$chainfilename"
+	chainpath="file::/config/ssl/'$chainfilename'"
 fi
 
 
@@ -99,12 +99,9 @@ row2='"2":["'${vipportarr[1]}'","'${protocolarr[1]}'",["'${hostarr[0]}':'${apppo
 
 deployment1='deployment_'${devicearr[5]}'.'${hostarr[1]}'.cloudapp.azure.com":{"traffic-group":"none","strict-updates":"disabled","variables":{},"tables":{"configuration__destination":{"column-names":["port","mode","backendmembers","monitoruser","monitorpass","monitoruri","monitorexpect","asmtemplate","asmapptype","asmlevel","l7ddos","ipintel","caching","tcpoptmode","fqdns","oneconnect","sslpkcs12","sslpassphrase","sslcert","sslkey","sslchain"],"rows":{'$row1','$row2'}}}}'
 
-jsonfile='{"loadbalance":{"is_master":"'${devicearr[0]}'","master_hostname":"'${devicearr[6]}'","master_address":"'${devicearr[7]}'","master_password":"'${devicearr[3]}'","device_hostname":"'${devicearr[1]}'","device_address":"'${devicearr[2]}'","device_password":"'${devicearr[3]}'"},"logging":{"saskey":"tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=","saskeyname":"sharing-is-caring","eventhub":"event-horizon","eventhub_namespace":"event-horizon-ns","logginglevel":"Alert","loggingtemplate":"CEF","applianceid":"8A3ED335-F734-449F-A8FB-335B48FE3B50"},"bigip":{"application_name":"Azure Security F5 WAF","ntp_servers":"1.pool.ntp.org 2.pool.ntp.org","ssh_key_inject":"false","change_passwords":"false","license":{"basekeyfile":"/config/bigip.license"},"modules":{"auto_provision":"true","ltm":"nominal","afm":"none","asm":"nominal"},"redundancy":{"provision":"false"},"network":{"provision":"false"},"iappconfig":{"f5.rome_waf_rc":{"template_location":"http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf_rc.tmpl","deployments":{"'$deployment1'}}}}}'
+jsonfile='{"loadbalance":{"is_master":"'${devicearr[0]}'","master_hostname":"'${devicearr[6]}'","master_address":"'${devicearr[7]}'","master_password":"'${devicearr[3]}'","device_hostname":"'${devicearr[1]}'","device_address":"'${devicearr[2]}'","device_password":"'${devicearr[3]}'"},"logging":{"saskey":"tAjn8Xuzelj9ps4HzRsHXqXznAIiHPFIzlSC08De2Zk=","saskeyname":"sharing-is-caring","eventhub":"event-horizon","eventhub_namespace":"event-horizon-ns","logginglevel":"Alert","loggingtemplate":"CEF","applianceid":"8A3ED335-F734-449F-A8FB-335B48FE3B50"},"bigip":{"application_name":"Azure Security F5 WAF","ntp_servers":"1.pool.ntp.org 2.pool.ntp.org","ssh_key_inject":"false","change_passwords":"false","license":{"basekey":"'${devicearr[4]}'"},"modules":{"auto_provision":"true","ltm":"nominal","afm":"none","asm":"nominal"},"redundancy":{"provision":"false"},"network":{"provision":"false"},"iappconfig":{"f5.rome_waf_rc":{"template_location":"http://cdn-prod-ore-f5.s3-website-us-west-2.amazonaws.com/product/blackbox/staging/azure/f5.rome_waf_rc.tmpl","deployments":{"'$deployment1'}}}}}'
 
 echo $jsonfile > /config/blackbox.conf
-
-## Create a file with the license token in it.
-echo ${devicearr[4]} > /config/bigip.license
 
 ## Move the files and run them.
 mv ./azuresecurity.sh /config/azuresecurity.sh
