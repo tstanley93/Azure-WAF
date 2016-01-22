@@ -671,7 +671,7 @@ function cmi_configuration() {
                
                # need to wait until the startup script has finished on the master BIG-IP
                failed=0
-               until [[ "$(curl -sk -u $master_user:$master_password -X GET -H "Content-type: application/json" https://$master_ip/mgmt/tm/util/unix-ls -d '{ "command":"run","utilCmdArgs":"/config/azuresecurity.sh" }' | grep -o "No such file or directory")" ]] || [[ $failed -eq $CMI_RETRIES ]]; do
+               until [[ "$(curl -sk -u $master_user:$master_password -X POST -H "Content-type: application/json" https://$master_ip/mgmt/tm/util/unix-ls -d '{ "command":"run","utilCmdArgs":"/config/azuresecurity.sh" }' | grep -o "No such file or directory")" ]] || [[ $failed -eq $CMI_RETRIES ]]; do
                     failed=$(($failed + 1))
                     log "Master not yet ready, retrying in $CMI_RETRY_INTERVAL seconds"
                     sleep $CMI_RETRY_INTERVAL
