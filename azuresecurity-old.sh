@@ -656,7 +656,7 @@ function cmi_configuration() {
                log "Sync device group found, returning to deployment."
           fi
      else
-          # we're a slave, so use REST API to join us to the trust domain and device group          
+          # we're a slave, so use REST API to join us to the trust domain and device group
           device_group=`tmsh list cm device-group Sync`          
           if [[ -z $device_group ]]; then
                master_hostname=$(get_user_data_value {loadbalance}{master_hostname}).azuresecurity.com
@@ -668,20 +668,6 @@ function cmi_configuration() {
                slave_address=$(get_user_data_value {loadbalance}{device_address})
                slave_user=admin
                slave_password="$(get_user_data_value {loadbalance}{device_password})"
-               
-               # need to wait until the startup script has finished on the master BIG-IP
-               failed=0
-               until [[ "$(curl -sk -u $master_user:$master_password -X GET -H "Content-type: application/json" https://$master_ip/mgmt/tm/util/unix-ls -d '{ "command":"run","utilCmdArgs":"/config/azuresecurity.sh" }' | grep -o "No such file or directory")" ]] || [[ $failed -eq $CMI_RETRIES ]]; do
-                    failed=$(($failed + 1))
-                    log "Master not yet ready, retrying in $CMI_RETRY_INTERVAL seconds"
-                    sleep $CMI_RETRY_INTERVAL
-               done
-               
-               if [[ $failed -ge $CMI_RETRIES ]]; then
-                    log "Could not detect that the master is ready after $failed attempts, quitting..."
-                    set_status "Failure: Could not detect that the master is ready after $failed attempts"
-                    exit
-               fi
                
                # add ourselves to the trust domain on the master
                if [[ -n $master_password && -n $slave_password ]]; then

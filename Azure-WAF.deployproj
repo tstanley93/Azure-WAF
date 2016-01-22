@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Include="azuredeploy.json" />
     <None Include="azuresecurity.sh" />
+    <None Include="azuresecurity-old.sh" />
     <None Include="blackbox_check.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
