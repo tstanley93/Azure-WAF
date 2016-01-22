@@ -117,5 +117,7 @@ if [ "$chainilename" != "" ]
 then
 	mv ./"$chainfilename" /config/ssl/"$chainfilename"
 fi
+chmod +w /config/startup
+echo "/config/azuresecurity.sh" >> /config/startup
 chmod u+x /config/azuresecurity.sh
 bash /config/azuresecurity.sh
