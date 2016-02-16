@@ -295,7 +295,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "443",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -309,7 +309,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "22",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -323,7 +323,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "880",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -337,7 +337,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "8444",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -370,7 +370,7 @@
         ],
         "loadBalancingRules": [
           {
-            "Name": "lbrule",
+            "name": "lbrule",
             "properties": {
               "frontendIPConfiguration": {
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
@@ -414,11 +414,11 @@
       "dependsOn": [
         "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
       ],
-      "properties": {
+      "Properties": {
         "frontendIPConfiguration": {
           "id": "[variables('frontEndIPConfigID')]"
         },
-        "protocol": "tcp",
+        "protocol": "Tcp",
         "frontendPort": "[copyIndex(8443)]",
         "backendPort": 443,
         "enableFloatingIP": false
@@ -436,11 +436,11 @@
       "dependsOn": [
         "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
       ],
-      "properties": {
+      "Properties": {
         "frontendIPConfiguration": {
           "id": "[variables('frontEndIPConfigID')]"
         },
-        "protocol": "tcp",
+        "protocol": "Tcp",
         "frontendPort": "[copyIndex(8022)]",
         "backendPort": 22,
         "enableFloatingIP": false
