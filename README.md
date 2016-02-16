@@ -13,6 +13,15 @@ The F5 WAF's will be fully configured with the base Security Blocking template t
 * location
   * Required
   * Choose the data center you want to install these Web Applicatin Firewall's into from the drop down list.
+* storageAccountName
+  * Required
+  * The name of the storage account containing the vhd to create the WAF's from.
+* containerName
+  * Required
+  * The name of the Container in the above storage account, that contains the VHD file.
+* vhdName
+  * Required
+  * The name of the VHD to use for the building the VM.
 * numberOFWAFs
   * Required
   * The number of Web Applicatin Firewall's (Up to 4) that will be deployed infront of your application.
