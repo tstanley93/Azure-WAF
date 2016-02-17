@@ -26,8 +26,9 @@
   <!-- vertag<:>end -->
   <ItemGroup>
     <None Include="azuredeploy.json" />
-    <None Include="azuresecurity.sh" />
+    <None Include="azuresecurity-3.sh" />
     <None Include="azuresecurity-2.sh" />
+    <None Include="azuresecurity.sh" />
     <None Include="azuresecurity-old.sh" />
     <None Include="blackbox_check.json" />
     <None Include="Deployment.targets">
