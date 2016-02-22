@@ -479,8 +479,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicNamePrefix'), copyindex())]",
-        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "copy": {
         "count": "[parameters('numberOFWAFs')]",
@@ -507,11 +506,11 @@
           "osDisk": {
             "osType": "Linux",
             "image": {
-              "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/', parameters('vhdName'), '.vhd')]"
+              "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/', parameters('vhdName'), '.vhd')]"
             },
             "name": "[concat('osdisk',copyindex())]",
             "vhd": {
-              "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/osDisk',copyindex(),'.vhd')]"
+              "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/osDisk',copyindex(),'.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
