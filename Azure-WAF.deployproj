@@ -30,6 +30,7 @@
     <None Include="azuresecurity-2.sh" />
     <None Include="azuresecurity-old.sh" />
     <None Include="blackbox_check.json" />
+    <None Include="createUiDefinition.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
