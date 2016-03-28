@@ -4,10 +4,10 @@
     "parameters": {
         "basics": [
             {
-                "name": "sharePointFarmName",
+                "name": "dnsNameForPublicIP",
                 "type": "Microsoft.Common.TextBox",
-                "label": "SharePoint farm name",
-                "defaultValue": "spfarm",
+                "label": "F5 WAF Cluster Name",
+                "defaultValue": "f5wafcl01",
                 "constraints": {
                     "required": true,
                     "regex": "^[a-z0-9A-Z]{1,10}$",
@@ -18,222 +18,236 @@
         "steps": [
             {
                 "name": "infrastructureConfig",
-                "label": "Infrastructure settings",
+                "label": "Infrastructure Settings",
                 "subLabel": {
-                    "preValidation": "Configure the infrastructure settings",
+                    "preValidation": "Configure Infrastructure Settings for the F5 WAF Cluster",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "Infrastructure settings",
+                "bladeTitle": "Infrastructure Settings",
+              "elements": [
+                {
+                  "name": "adminUsername",
+                  "type": "Microsoft.Compute.UserNameTextBox",
+                  "label": "Username",
+                  "toolTip": "Admin username for the virtual machines. Same Credientials is to SSH to the box.",
+                  "osPlatform": "Linux"
+                },
+                {
+                  "name": "SSHCredntials",
+                  "type": "Microsoft.Compute.CredentialsCombo",
+                  "label": {
+                    "authenticationType": "Authentication type",
+                    "password": "Password",
+                    "confirmPassword": "Confirm password",
+                    "sshPublicKey": "SSH public key"
+                  },
+                  "toolTip": {
+                    "authenticationType": "",
+                    "password": "",
+                    "sshPublicKey": ""
+                  },
+                  "constraints": {
+                    "required": true
+                  },
+                  "options": {
+                    "hideConfirmation": false
+                  },
+                  "osPlatform": "Linux"
+                },
+                {
+                  "name": "numberOFWAFs",
+                  "type": "Microsoft.Common.DropDown",
+                  "label": "Numbe of WAFs",
+                  "defaultValue": "2",
+                  "toolTip": "The number of individual F5 WAFs (nodes) to provision for this cluster.",
+                  "constraints": {
+                    "allowedValues": [
+                      {
+                        "label": "1",
+                        "value": 1
+                      },
+                      {
+                        "label": "2",
+                        "value": 2
+                      },
+                      {
+                        "label": "3",
+                        "value": 3
+                      },
+                      {
+                        "label": "4",
+                        "value": 4
+                      },
+                      {
+                        "label": "5",
+                        "value": 5
+                      },
+                      {
+                        "label": "6",
+                        "value": 6
+                      },
+                      {
+                        "label": "7",
+                        "value": 7
+                      },
+                      {
+                        "label": "8",
+                        "value": 8
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "clusterVmSize",
+                  "type": "Microsoft.Compute.SizeSelector",
+                  "label": "Virtual machine size",
+                  "toolTip": "The size of virtual machine to provision for each cluster node.",
+                  "recommendedSizes": [
+                    "Standard_D1",
+                    "Standard_D2",
+                    "Standard_D3",
+                    "Standard_D4"
+                  ],
+                  "constraints": {
+                    "allowedSizes": [
+                      "Standard_D1",
+                      "Standard_D2",
+                      "Standard_D3",
+                      "Standard_D4"
+                    ]
+                  },
+                  "osPlatform": "Linux",
+                  "imageReference": {
+                    "publisher": "Canonical",
+                    "offer": "UbuntuServer",
+                    "sku": "14.04.2-LTS"
+                  },
+                  "count": [ "steps('infrastructureConfig').numberOFWAFs" ]
+                }
+              ]
+            },
+            {
+                "name": "f5WAFConfig",
+                "label": "F5 WAF Config",
+                "subLabel": {
+                    "preValidation": "F5 WAF Configuration",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "F5 WAF Configuration",
+              "elements": [
+                {
+                  "name": "licenseToken1",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the first F5 WAF node.",
+                  "constraints": {
+                    "required": true,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                },
+                {
+                  "name": "licenseToken2",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the second F5 WAF node.",
+                  "constraints": {
+                    "required": false,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                },
+                {
+                  "name": "licenseToken3",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the third F5 WAF node.",
+                  "constraints": {
+                    "required": false,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                },
+                {
+                  "name": "licenseToken4",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the fourth F5 WAF node.",
+                  "constraints": {
+                    "required": false,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                },
+                {
+                  "name": "licenseToken5",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the fifth F5 WAF node.",
+                  "constraints": {
+                    "required": false,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                },
+                {
+                  "name": "licenseToken6",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the sixth F5 WAF node.",
+                  "constraints": {
+                    "required": false,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                },
+                {
+                  "name": "licenseToken7",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the seventh F5 WAF node.",
+                  "constraints": {
+                    "required": false,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                },
+                {
+                  "name": "licenseToken8",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "BYOL Token",
+                  "toolTip": " BYOL Token for the eighth F5 WAF node.",
+                  "constraints": {
+                    "required": false,
+                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
+                    "validationMessage": "Must be a valid fully-qualified domain name."
+                  }
+                }
+              ]
+            },
+            {
+                "name": "appSettings",
+                "label": "Application Settings",
+                "subLabel": {
+                    "preValidation": "Configure Application Settings.",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Application Settings",
                 "elements": [
-                    {
-                        "name": "adminUsername",
-                        "type": "Microsoft.Compute.UserNameTextBox",
-                        "label": "Username",
-                        "toolTip": "Admin username for the virtual machines and the Active Directory domain.",
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        }   
-                    },
-                    {
-                        "name": "adminPassword",
-                        "type": "Microsoft.Compute.CredentialsCombo",
-                        "label": {
-                            "password": "Password",
-                            "confirmPassword": "Confirm password"
-                        },
-                        "toolTip": {
-                            "password": "Admin password for the virtual machines and the Active Directory domain."
-                        },
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "storageAccounts",
-                        "type": "Microsoft.Storage.MultiStorageAccountCombo",
-                        "label": {
-                            "prefix": "Storage account name prefix",
-                            "type": "Storage account type"
-                        },
-                        "defaultValue": {
-                            "type": "Premium_LRS"
-                        },
-                        "count": 3,
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "virtualNetworkName",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Virtual Network name",
-                        "toolTip": "Name of the virtual network to be created",
-                        "defaultValue": "spfarmvnet",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z0-9A-Z]{1,10}$",
-                            "validationMessage": "Only letters and numbers are allowed, and the value must be 1-10 characters long."
-                        }
+                  {
+                    "name": "applicationName",
+                    "type": "Microsoft.Common.TextBox",
+                    "label": "Application Name",
+                    "toolTip": "The name of the applicaiton that will be placed behind this WAF cluster to be protected.",
+                    "constraints": {
+                      "required": true
                     }
+                  }
                 ]
             },
             {
-                "name": "adConfig",
-                "label": "Active Directory settings",
-                "subLabel": {
-                    "preValidation": "Configure the domain controllers",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "Active Directory settings",
-                "elements": [
-                    {
-                        "name": "domainName",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Forest root domain name",
-                        "toolTip": "Fully-qualified domain name of the Active directory domain.",
-                        "defaultValue": "contoso.com",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                            "validationMessage": "Must be a valid fully-qualified domain name."
-                        }
-                    },
-                    {
-                        "name": "adVmSize",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "Active Directory virtual machine size",
-                        "toolTip": "The size of the virtual machines for the primary and backup domain controllers.",
-                        "recommendedSizes": [
-                            "Standard_DS2",
-                            "Standard_DS3",
-                            "Standard_DS4"
-                        ],
-                        "constraints": {
-                            "required": true,
-                            "allowedSizes": [
-                                "Standard_D2",
-                                "Standard_DS2",
-                                "Standard_D3",
-                                "Standard_DS3",
-                                "Standard_D4",
-                                "Standard_DS4",
-                                "Standard_D11",
-                                "Standard_DS11",
-                                "Standard_D12",
-                                "Standard_DS12",
-                                "Standard_D13",
-                                "Standard_DS13",
-                                "Standard_D14",
-                                "Standard_DS14"
-                            ]
-                        },
-                        "osPlatform": "Windows",
-                        "imageReference": {
-                            "publisher": "MicrosoftWindowsServer",
-                            "offer": "WindowsServer",
-                            "sku": "2012-R2-Datacenter"
-                        },
-                        "count": 2
-                    }
-                ]
-            },
-            {
-                "name": "sqlConfig",
-                "label": "SQL Server settings",
-                "subLabel": {
-                    "preValidation": "Configure the SQL Servers",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "SQL Server settings",
-                "elements": [
-                    {
-                        "name": "sqlVmSize",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "SQL Server virtual machine size",
-                        "toolTip": "The size of the virtual machines for the primary and secondary replicas.",
-                        "recommendedSizes": [
-                            "Standard_DS3",
-                            "Standard_DS4",
-                            "Standard_DS14"
-                        ],
-                        "constraints": {
-                            "required": true,
-                            "allowedSizes": [
-                                "Standard_D3",
-                                "Standard_DS3",
-                                "Standard_D4",
-                                "Standard_DS4",
-                                "Standard_D11",
-                                "Standard_DS11",
-                                "Standard_D12",
-                                "Standard_DS12",
-                                "Standard_D13",
-                                "Standard_DS13",
-                                "Standard_D14",
-                                "Standard_DS14"
-                            ]
-                        },
-                        "osPlatform": "Windows",
-                        "imageReference": {
-                            "publisher": "MicrosoftSQLServer",
-                            "offer": "SQL2014-WS2012R2",
-                            "sku": "Enterprise"
-                        },
-                        "count": 2
-                    },
-                    {
-                        "name": "witnessVMSize",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "SQL Witness virtual machine size",
-                        "toolTip": "The size of the virtual machine for the SQL witness.",
-                        "recommendedSizes": [
-                            "Standard_DS1"
-                        ],
-                        "constraints": {
-                            "required": true,
-                            "allowedSizes": [
-                                "Standard_D1",
-                                "Standard_DS1"
-                            ]
-                        },
-                        "osPlatform": "Windows",
-                        "imageReference": {
-                            "publisher": "MicrosoftSQLServer",
-                            "offer": "SQL2014-WS2012R2",
-                            "sku": "Enterprise"
-                        },
-                        "count": 1
-                    },
-                    {
-                        "name": "sqlServerServiceAccountUsername",
-                        "type": "Microsoft.Compute.UserNameTextBox",
-                        "label": "Service account username",
-                        "toolTip": "An account with this username will be used to run the following SQL Server services: MSSQLSERVER and SQLSERVERAGENT.",
-                        "defaultValue": "sqlservice",
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "sqlServerServiceAccountPassword",
-                        "type": "Microsoft.Compute.CredentialsCombo",
-                        "label": {
-                            "password": "Service account password",
-                            "confirmPassword": "Confirm password"
-                        },
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    }
-                ]
-            },
-            {
-                "name": "spConfig",
-                "label": "SharePoint Server settings",
+                "name": "securitySettings",
+                "label": "Security Settings",
                 "subLabel": {
                   "preValidation": "Configure the SharePoint servers",
                     "postValidation": "Done"
@@ -403,31 +417,27 @@
                 ]
             }
         ],
-        "outputs": {
-            "location": "[location()]",
-            "sharepointFarmName" : "[basics('sharePointFarmName')]",
-            "storageAccountNamePrefix": "[steps('infrastructureConfig').storageAccounts.prefix]",
-            "storageAccountType": "[steps('infrastructureConfig').storageAccounts.type]",
-            "adminUsername": "[steps('infrastructureConfig').adminUsername]",
-            "adminPassword": "[steps('infrastructureConfig').adminPassword.password]",
-            "virtualNetworkName" : "[steps('infrastructureConfig').virtualNetworkName]",
-            "adVMSize": "[steps('adConfig').adVmSize]",
-            "sqlVMSize": "[steps('sqlConfig').sqlVmSize]",
-            "witnessVMSize" : "[steps('sqlConfig').witnessVMSize]",
-            "spVMSize": "[steps('spConfig').spVmSize]",
-            "domainName": "[steps('adConfig').domainName]",
-            "dnsPrefix": "[steps('spConfig').spWebPublicIP.domainNameLabel]",
-            "spWebIPRGName" : "[steps('spConfig').spWebPublicIP.resourceGroup]",
-            "spWebIPAddressName" : "[steps('spConfig').spWebPublicIP.name]",
-            "spWebIPNewOrExisting" : "[steps('spConfig').spWebPublicIP.newOrExistingOrNone]",
-            "sqlServerServiceAccountUserName": "[steps('sqlConfig').sqlServerServiceAccountUsername]",
-            "sqlServerServiceAccountPassword": "[steps('sqlConfig').sqlServerServiceAccountPassword.password]",
-            "sharePointSetupUserAccountUserName": "[steps('spConfig').spSetupUserAccountUsername]",
-            "sharePointSetupUserAccountPassword": "[steps('spConfig').spSetupUserAccountPassword.password]",
-            "sharePointFarmAccountUserName": "[steps('spConfig').spServerFarmAccountUsername]",
-            "sharePointFarmAccountPassword": "[steps('spConfig').spServerFarmAccountPassword.password]",
-            "sharePointFarmPassphrasePassword": "[steps('spConfig').spServerFarmPassphrase.password]",
-            "spSiteTemplateName": "[steps('spConfig').spSiteTemplateName]"
-        }
+      "outputs": {
+        "location": "[location()]",
+        "numberOFWAFs": "[basics('dnsNameForPublicIP')]",
+        "vmSize": "[steps('infrastructureConfig').storageAccounts.prefix]",
+        "dnsNameForPublicIP": "[steps('infrastructureConfig').storageAccounts.type]",
+        "adminUsername": "[steps('infrastructureConfig').adminUsername]",
+        "adminPassword": "[steps('infrastructureConfig').adminPassword.password]",
+        "licenseToken1": "[steps('infrastructureConfig').virtualNetworkName]",
+        "licenseToken2": "[steps('adConfig').adVmSize]",
+        "licenseToken3": "[steps('sqlConfig').sqlVmSize]",
+        "licenseToken4": "[steps('sqlConfig').witnessVMSize]",
+        "applicationName": "[steps('spConfig').spVmSize]",
+        "applicationProtocols": "[steps('adConfig').domainName]",
+        "applicationAddress": "[steps('spConfig').spWebPublicIP.domainNameLabel]",
+        "applicationPorts": "[steps('spConfig').spWebPublicIP.resourceGroup]",
+        "applicationType": "[steps('spConfig').spWebPublicIP.name]",
+        "blockingLevel": "[steps('spConfig').spWebPublicIP.newOrExistingOrNone]",
+        "applicationFQDN": "[steps('sqlConfig').sqlServerServiceAccountUsername]",
+        "applicationCertificate": "[steps('sqlConfig').sqlServerServiceAccountPassword.password]",
+        "applicationKey": "[steps('spConfig').spSetupUserAccountUsername]",
+        "applicationChain": "[steps('spConfig').spSetupUserAccountPassword.password]"
+      }
     }
 }
