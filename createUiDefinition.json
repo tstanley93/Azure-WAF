@@ -233,211 +233,225 @@
                     "postValidation": "Done"
                 },
                 "bladeTitle": "Application Settings",
-                "elements": [
-                  {
-                    "name": "applicationName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Application Name",
-                    "toolTip": "The name of the applicaiton that will be placed behind this WAF cluster to be protected.",
-                    "constraints": {
-                      "required": true
-                    }
+              "elements": [
+                {
+                  "name": "applicationName",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Name",
+                  "toolTip": "The name of the applicaiton that will be placed behind this WAF cluster to be protected.",
+                  "constraints": {
+                    "required": true
                   }
-                ]
+                },
+                {
+                  "name": "applicationProtocols",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Protocols",
+                  "toolTip": "A semi-colon separated list of protocols (http;https) that will be used to configure the WAF's VIP's, (e.g. http for port 80 and https for SSL).",
+                  "constraints": {
+                    "required": true
+                  }
+                },
+                {
+                  "name": "applicationAddress",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Address",
+                  "toolTip": "The public IP address or DNS FQDN of the Application that this WAF is for.",
+                  "constraints": {
+                    "required": true
+                  }
+                },
+                {
+                  "name": "applicationPorts",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Ports",
+                  "toolTip": "A semi-colon separated list of ports, (80;443) that your applicaiton is listening on, (e.g. 80 and 443).",
+                  "constraints": {
+                    "required": true
+                  }
+                },
+                {
+                  "name": "applicationType",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Type",
+                  "toolTip": "Is your application running on a Linux OS or a Windows OS?",
+                  "constraints": {
+                    "required": true
+                  }
+                },
+                {
+                  "name": "applicationFQDN",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application FQDN",
+                  "toolTip": "The Fully Qualified Domain Name of your application. (e.g. www.example.com).",
+                  "constraints": {
+                    "required": true
+                  }
+                }
+              ]
             },
             {
                 "name": "securitySettings",
                 "label": "Security Settings",
                 "subLabel": {
-                  "preValidation": "Configure the SharePoint servers",
+                  "preValidation": "Configure Security Settings for this F5 WAF Cluster.",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "SharePoint Server settings",
-                "elements": [
-                    {
-                      "name": "spWebPublicIP",
-                      "type": "Microsoft.Network.PublicIpAddressCombo",
-                      "label": {
-                        "publicIpAddress": "Public IP address for SharePoint web tier",
-                        "domainNameLabel": "Domain name label for SharePoint web tier"
+                "bladeTitle": "Security Settings",
+              "elements": [
+                {
+                  "name": "blockingLevel",
+                  "type": "Microsoft.Common.DropDown",
+                  "label": "Security Blocking Level",
+                  "constraints": {
+                    "required": true,
+                    "allowedValues": [
+                      {
+                        "label": "Generic - IIS",
+                        "value": "windows"
                       },
-                      "toolTip": {
-                        "domainNameLabel": "DNS label for the SharePoint web tiers' public IP address, which hosts the first site collection."
+                      {
+                        "label": "Generic - Apache",
+                        "value": "linux"
                       },
-                      "defaultValue": {
-                        "publicIpAddressName": "ip01"
+                      {
+                        "label": "Generic - NGINX",
+                        "value": "linux"
                       },
-                      "options": {
-                        "hideNone": true,
-                        "hideDomainNameLabel": false
+                      {
+                        "label": "Shop - Magento ",
+                        "value": "linux"
                       },
-                      "constraints": {
-                            "required": true
-                       } 
-                    },
-                    {
-                        "name": "spVmSize",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "SharePoint virtual machine size",
-                        "toolTip": "The size of the virtual machines for the SharePoint web and app tiers.",
-                        "recommendedSizes": [
-                            "Standard_DS3",
-                            "Standard_DS4",
-                            "Standard_DS14"
-                        ],
-                        "constraints": {
-                            "required": true,
-                            "allowedSizes": [
-                                "Standard_D3",
-                                "Standard_DS3",
-                                "Standard_D4",
-                                "Standard_DS4",
-                                "Standard_D11",
-                                "Standard_DS11",
-                                "Standard_D12",
-                                "Standard_DS12",
-                                "Standard_D13",
-                                "Standard_DS13",
-                                "Standard_D14",
-                                "Standard_DS14"
-                            ]
-                        },
-                        "osPlatform": "Windows",
-                        "imageReference": {
-                            "publisher": "MicrosoftSharePoint",
-                            "offer": "MicrosoftSharePointServer",
-                            "sku": "2013"
-                        },
-                        "count": 4
-                    },
-                    {
-                        "name": "spSetupUserAccountUsername",
-                        "type": "Microsoft.Compute.UserNameTextBox",
-                        "label": "Setup user account username",
-                        "toolTip": "A domain account with this username will be created to run setup and SharePoint Products Configuration Wizard.",
-                        "defaultValue": "spsetup",
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "spSetupUserAccountPassword",
-                        "type": "Microsoft.Compute.CredentialsCombo",
-                        "label": {
-                            "password": "Setup user account password",
-                            "confirmPassword": "Confirm password"
-                        },
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "spServerFarmAccountUsername",
-                        "type": "Microsoft.Compute.UserNameTextBox",
-                        "label": "Server farm account username",
-                        "toolTip": "A domain account with this username will be created to perform the following tasks: configure and manage server farm, act as the application pool identity for the SharePoint Central Administration Web site and run the Microsoft SharePoint Foundation Workflow Timer Service.",
-                        "defaultValue": "sp_farm",
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "spServerFarmAccountPassword",
-                        "type": "Microsoft.Compute.CredentialsCombo",
-                        "label": {
-                            "password": "Server farm account password",
-                            "confirmPassword": "Confirm password"
-                        },
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "spServerFarmPassphrase",
-                        "type": "Microsoft.Compute.CredentialsCombo",
-                        "label": {
-                            "password": "Server farm passphrase",
-                            "confirmPassword": "Confirm passphrase"
-                        },
-                        "toolTip": {
-                            "password": "A secure password phrase that will be used to join other machines to this farm."
-                        },
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        } 
-                    },
-                    {
-                        "name": "spSiteTemplateName",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Content site template",
-                        "defaultValue": "Team Site",
-                        "constraints": {
-                            "required" : true,
-                            "allowedValues": [
-                                {
-                                    "label": "Team Site",
-                                    "value": "STS#0"
-                                },
-                                {
-                                    "label": "Blank Site",
-                                    "value": "STS#1"
-                                },
-                                {
-                                    "label": "Document Workspace",
-                                    "value": "STS#2"
-                                },
-                                {
-                                    "label": "Document Workspace",
-                                    "value": "STS#2"
-                                },
-                                {
-                                    "label": "Basic Meeting Workspace",
-                                    "value": "MPS#0"
-                                },
-                                {
-                                    "label": "Decision Meeting Workspace",
-                                    "value": "MPS#2"
-                                },
-                                {
-                                    "label": "Wiki Site",
-                                    "value": "WIKI#0"
-                                },
-                                {
-                                    "label": "Central Admin Site",
-                                    "value": "CENTRALADMIN#0"
-                                }
-                            ]
-                        }
-                    }
-                ]
+                      {
+                        "label": "Shop - WooCommerce",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "Shop - BigCommerce",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "Shop - Volusion",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "Shop - Miva Merchant",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "Shop - Shopify",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "Shop - Demandware",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "Shop - osCommerce",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "Shop - Generic",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - WordPress",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - Drupal",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - Joomla!",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - Blogger",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - vBulletin",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - ExpressionEngine",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - DNN Software",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - Adobe CQ",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - Ektron",
+                        "value": "linux"
+                      },
+                      {
+                        "label": "CMS - Sharepoint",
+                        "value": "windows"
+                      },
+                      {
+                        "label": "CMS - Generic",
+                        "value": "linux"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "applicationCertificate",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Name",
+                  "toolTip": "The path to the SSL certificate file. (Optional)",
+                  "constraints": {
+                    "required": false
+                  }
+                },
+                {
+                  "name": "applicationKey",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Name",
+                  "toolTip": "The path to the SSL key file. (Optional)",
+                  "constraints": {
+                    "required": false
+                  }
+                },
+                {
+                  "name": "applicationChain",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application Name",
+                  "toolTip": "The path to the SSL chain file. (Optional)",
+                  "constraints": {
+                    "required": false
+                  }
+                }
+              ]
             }
         ],
       "outputs": {
         "location": "[location()]",
-        "numberOFWAFs": "[basics('dnsNameForPublicIP')]",
-        "vmSize": "[steps('infrastructureConfig').storageAccounts.prefix]",
-        "dnsNameForPublicIP": "[steps('infrastructureConfig').storageAccounts.type]",
+        "numberOFWAFs": "[steps('infrastructureConfig').numberOFWAFs]",
+        "vmSize": "[steps('infrastructureConfig').clusterVmSize]",
+        "dnsNameForPublicIP": "[basics('dnsNameForPublicIP')]",
         "adminUsername": "[steps('infrastructureConfig').adminUsername]",
-        "adminPassword": "[steps('infrastructureConfig').adminPassword.password]",
-        "licenseToken1": "[steps('infrastructureConfig').virtualNetworkName]",
-        "licenseToken2": "[steps('adConfig').adVmSize]",
-        "licenseToken3": "[steps('sqlConfig').sqlVmSize]",
-        "licenseToken4": "[steps('sqlConfig').witnessVMSize]",
-        "applicationName": "[steps('spConfig').spVmSize]",
-        "applicationProtocols": "[steps('adConfig').domainName]",
-        "applicationAddress": "[steps('spConfig').spWebPublicIP.domainNameLabel]",
-        "applicationPorts": "[steps('spConfig').spWebPublicIP.resourceGroup]",
-        "applicationType": "[steps('spConfig').spWebPublicIP.name]",
-        "blockingLevel": "[steps('spConfig').spWebPublicIP.newOrExistingOrNone]",
-        "applicationFQDN": "[steps('sqlConfig').sqlServerServiceAccountUsername]",
-        "applicationCertificate": "[steps('sqlConfig').sqlServerServiceAccountPassword.password]",
-        "applicationKey": "[steps('spConfig').spSetupUserAccountUsername]",
-        "applicationChain": "[steps('spConfig').spSetupUserAccountPassword.password]"
+        "adminPassword": "[steps('infrastructureConfig').SSHCredntials.password]",
+        "licenseToken1": "[steps('f5WAFConfig').licenseToken1]",
+        "licenseToken2": "[steps('f5WAFConfig').licenseToken2]",
+        "licenseToken3": "[steps('f5WAFConfig').licenseToken3]",
+        "licenseToken4": "[steps('f5WAFConfig').licenseToken4]",
+        "applicationName": "[steps('appSettings').applicationName]",
+        "applicationProtocols": "[steps('appSettings').applicationProtocols]",
+        "applicationAddress": "[steps('appSettings').applicationAddress]",
+        "applicationPorts": "[steps('appSettings').applicationPorts]",
+        "applicationType": "[steps('appSettings').applicationType]",
+        "applicationFQDN": "[steps('appSettings').applicationFQDN]",
+        "blockingLevel": "[steps('securitySettings').blockingLevel]",
+        "applicationCertificate": "[steps('securitySettings').applicationCertificate]",
+        "applicationKey": "[steps('securitySettings').applicationKey]",
+        "applicationChain": "[steps('securitySettings').applicationChain]"
       }
     }
 }
