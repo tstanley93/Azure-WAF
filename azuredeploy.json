@@ -295,7 +295,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "443",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -309,7 +309,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "22",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -323,7 +323,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "880",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -337,7 +337,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "8444",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -418,7 +418,7 @@
         "frontendIPConfiguration": {
           "id": "[variables('frontEndIPConfigID')]"
         },
-        "protocol": "tcp",
+        "protocol": "Tcp",
         "frontendPort": "[copyIndex(8443)]",
         "backendPort": 443,
         "enableFloatingIP": false
