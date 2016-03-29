@@ -77,22 +77,6 @@
                       {
                         "label": "4",
                         "value": 4
-                      },
-                      {
-                        "label": "5",
-                        "value": 5
-                      },
-                      {
-                        "label": "6",
-                        "value": 6
-                      },
-                      {
-                        "label": "7",
-                        "value": 7
-                      },
-                      {
-                        "label": "8",
-                        "value": 8
                       }
                     ]
                   }
@@ -115,14 +99,7 @@
                       "Standard_D3",
                       "Standard_D4"
                     ]
-                  },
-                  "osPlatform": "Linux",
-                  "imageReference": {
-                    "publisher": "Canonical",
-                    "offer": "UbuntuServer",
-                    "sku": "14.04.2-LTS"
-                  },
-                  "count": [ "steps('infrastructureConfig').numberOFWAFs" ]
+                  }
                 }
               ]
             },
@@ -139,88 +116,40 @@
                   "name": "licenseToken1",
                   "type": "Microsoft.Common.TextBox",
                   "label": "BYOL Token",
+                  "defaultValue": "Required",
                   "toolTip": " BYOL Token for the first F5 WAF node.",
                   "constraints": {
-                    "required": true,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
+                    "required": true
                   }
                 },
                 {
                   "name": "licenseToken2",
                   "type": "Microsoft.Common.TextBox",
                   "label": "BYOL Token",
+                  "defaultValue": "Only if Needed",
                   "toolTip": " BYOL Token for the second F5 WAF node.",
                   "constraints": {
-                    "required": false,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
+                    "required": false
                   }
                 },
                 {
                   "name": "licenseToken3",
                   "type": "Microsoft.Common.TextBox",
                   "label": "BYOL Token",
+                  "defaultValue": "Only if Needed",
                   "toolTip": " BYOL Token for the third F5 WAF node.",
                   "constraints": {
-                    "required": false,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
+                    "required": false
                   }
                 },
                 {
                   "name": "licenseToken4",
                   "type": "Microsoft.Common.TextBox",
                   "label": "BYOL Token",
+                  "defaultValue": "Only if Needed",
                   "toolTip": " BYOL Token for the fourth F5 WAF node.",
                   "constraints": {
-                    "required": false,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
-                  }
-                },
-                {
-                  "name": "licenseToken5",
-                  "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
-                  "toolTip": " BYOL Token for the fifth F5 WAF node.",
-                  "constraints": {
-                    "required": false,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
-                  }
-                },
-                {
-                  "name": "licenseToken6",
-                  "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
-                  "toolTip": " BYOL Token for the sixth F5 WAF node.",
-                  "constraints": {
-                    "required": false,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
-                  }
-                },
-                {
-                  "name": "licenseToken7",
-                  "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
-                  "toolTip": " BYOL Token for the seventh F5 WAF node.",
-                  "constraints": {
-                    "required": false,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
-                  }
-                },
-                {
-                  "name": "licenseToken8",
-                  "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
-                  "toolTip": " BYOL Token for the eighth F5 WAF node.",
-                  "constraints": {
-                    "required": false,
-                    "regex": "^([a-z0-9]+\\.)?([a-z0-9][a-z0-9-]*\\.)+[a-z]{2,6}$",
-                    "validationMessage": "Must be a valid fully-qualified domain name."
+                    "required": false
                   }
                 }
               ]
@@ -238,6 +167,7 @@
                   "name": "applicationName",
                   "type": "Microsoft.Common.TextBox",
                   "label": "Application Name",
+                  "defaultValue": "application01",
                   "toolTip": "The name of the applicaiton that will be placed behind this WAF cluster to be protected.",
                   "constraints": {
                     "required": true
@@ -247,6 +177,7 @@
                   "name": "applicationProtocols",
                   "type": "Microsoft.Common.TextBox",
                   "label": "Application Protocols",
+                  "defaultValue": "http;https",
                   "toolTip": "A semi-colon separated list of protocols (http;https) that will be used to configure the WAF's VIP's, (e.g. http for port 80 and https for SSL).",
                   "constraints": {
                     "required": true
@@ -256,7 +187,8 @@
                   "name": "applicationAddress",
                   "type": "Microsoft.Common.TextBox",
                   "label": "Application Address",
-                  "toolTip": "The public IP address or DNS FQDN of the Application that this WAF is for.",
+                  "defaultValue": "1.2.3.4",
+                  "toolTip": "The public IP address of the Application that this WAF will protect.",
                   "constraints": {
                     "required": true
                   }
@@ -265,6 +197,7 @@
                   "name": "applicationPorts",
                   "type": "Microsoft.Common.TextBox",
                   "label": "Application Ports",
+                  "defaultValue": "80;443",
                   "toolTip": "A semi-colon separated list of ports, (80;443) that your applicaiton is listening on, (e.g. 80 and 443).",
                   "constraints": {
                     "required": true
@@ -272,39 +205,11 @@
                 },
                 {
                   "name": "applicationType",
-                  "type": "Microsoft.Common.TextBox",
+                  "type": "Microsoft.Common.DropDown",
                   "label": "Application Type",
+                  "defaultValue": "Generic - Apache",
                   "toolTip": "Is your application running on a Linux OS or a Windows OS?",
                   "constraints": {
-                    "required": true
-                  }
-                },
-                {
-                  "name": "applicationFQDN",
-                  "type": "Microsoft.Common.TextBox",
-                  "label": "Application FQDN",
-                  "toolTip": "The Fully Qualified Domain Name of your application. (e.g. www.example.com).",
-                  "constraints": {
-                    "required": true
-                  }
-                }
-              ]
-            },
-            {
-                "name": "securitySettings",
-                "label": "Security Settings",
-                "subLabel": {
-                  "preValidation": "Configure Security Settings for this F5 WAF Cluster.",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "Security Settings",
-              "elements": [
-                {
-                  "name": "blockingLevel",
-                  "type": "Microsoft.Common.DropDown",
-                  "label": "Security Blocking Level",
-                  "constraints": {
-                    "required": true,
                     "allowedValues": [
                       {
                         "label": "Generic - IIS",
@@ -402,9 +307,53 @@
                   }
                 },
                 {
+                  "name": "applicationFQDN",
+                  "type": "Microsoft.Common.TextBox",
+                  "label": "Application FQDN",
+                  "defaultValue": "www.example.com",
+                  "toolTip": "The Fully Qualified Domain Name that your application will use from the Internet. (e.g. www.example.com).",
+                  "constraints": {
+                    "required": true
+                  }
+                }
+              ]
+            },
+            {
+                "name": "securitySettings",
+                "label": "Security Settings",
+                "subLabel": {
+                  "preValidation": "Configure Security Settings for this F5 WAF Cluster.",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Security Settings",
+              "elements": [
+                {
+                  "name": "blockingLevel",
+                  "type": "Microsoft.Common.DropDown",
+                  "label": "Security Blocking Level",
+                  "defaultValue": "Medium",
+                  "constraints": {
+                    "required": true,
+                    "allowedValues": [
+                      {
+                        "label": "High",
+                        "value": "high"
+                      },
+                      {
+                        "label": "Medium",
+                        "value": "medium"
+                      },
+                      {
+                        "label": "Low",
+                        "value": "low"
+                      }
+                    ]
+                  }
+                },
+                {
                   "name": "applicationCertificate",
                   "type": "Microsoft.Common.TextBox",
-                  "label": "Application Name",
+                  "label": "Application Certificate Path",
                   "toolTip": "The path to the SSL certificate file. (Optional)",
                   "constraints": {
                     "required": false
@@ -413,7 +362,7 @@
                 {
                   "name": "applicationKey",
                   "type": "Microsoft.Common.TextBox",
-                  "label": "Application Name",
+                  "label": "Application Key Path",
                   "toolTip": "The path to the SSL key file. (Optional)",
                   "constraints": {
                     "required": false
@@ -422,7 +371,7 @@
                 {
                   "name": "applicationChain",
                   "type": "Microsoft.Common.TextBox",
-                  "label": "Application Name",
+                  "label": "Application Chain Cert Path",
                   "toolTip": "The path to the SSL chain file. (Optional)",
                   "constraints": {
                     "required": false
@@ -433,9 +382,9 @@
         ],
       "outputs": {
         "location": "[location()]",
+        "dnsNameForPublicIP": "[basics('dnsNameForPublicIP')]",
         "numberOFWAFs": "[steps('infrastructureConfig').numberOFWAFs]",
         "vmSize": "[steps('infrastructureConfig').clusterVmSize]",
-        "dnsNameForPublicIP": "[basics('dnsNameForPublicIP')]",
         "adminUsername": "[steps('infrastructureConfig').adminUsername]",
         "adminPassword": "[steps('infrastructureConfig').SSHCredntials.password]",
         "licenseToken1": "[steps('f5WAFConfig').licenseToken1]",

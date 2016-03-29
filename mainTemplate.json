@@ -4,36 +4,18 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "West US",
-      "allowedValues": [
-        "Brazil South",
-        "Central US",
-        "East Aisa",
-        "East US",
-        "East US 2",
-        "Japan East",
-        "Japan West",
-        "North Central US",
-        "North Europe",
-        "South Central US",
-        "Southeast Aisa",
-        "West Europe",
-        "West US"
-      ],
       "metadata": {
         "description": "The data center you want to install these Web Applicatin Firewall's into."
       }
     },
     "numberOFWAFs": {
       "type": "int",
-      "defaultValue": 2,
       "metadata": {
         "description": "The number of Web Applicatin Firewall's (Up to 4) that will be deployed infront of your application."
       }
     },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_A3",
       "metadata": {
         "description": "The size of the Virtual Hardware Instance."
       },
@@ -46,7 +28,6 @@
     },
     "adminUsername": {
       "type": "string",
-      "defaultValue": "azureuser",
       "metadata": {
         "description": "User name to login to the Web Applicatin Firewall."
       }
@@ -92,14 +73,12 @@
     },
     "applicationName": {
       "type": "string",
-      "defaultValue": "myAppName",
       "metadata": {
         "description": "Please provide a simple name for your application."
       }
     },
     "applicationProtocols": {
       "type": "string",
-      "defaultValue": "http;https",
       "metadata": {
         "description": "A semi-colon separated list of protocols (http;https) that will be used to configure the WAF's VIP's, (e.g. http for port 80 and https for SSL)."
       }
@@ -112,7 +91,6 @@
     },
     "applicationPorts": {
       "type": "string",
-      "defaultValue": "80;443",
       "metadata": {
         "description": "A semi-colon separated list of ports, (80;443) that your applicaiton is listening on, (e.g. 80 and 443)."
       }
@@ -121,49 +99,34 @@
       "type": "string",
       "metadata": {
         "description": "Is your application running on a Linux OS or a Windows OS?"
-      },
-      "defaultValue": "Linux",
-      "allowedValues": [
-        "Linux",
-        "Windows"
-      ]
+      }
     },
     "blockingLevel": {
       "type": "string",
       "metadata": {
         "description": "Please select how aggressive you would like the blocking level of this WAF to be.  Remember that the more aggressive the blocking level, the more potential there is for false-positives that the WAF might detect."
-      },
-      "defaultValue": "Medium",
-      "allowedValues": [
-        "Low",
-        "Medium",
-        "High"
-      ]
+      }
     },
     "applicationFQDN": {
       "type": "string",
-      "defaultValue": "www.contoso.com",
       "metadata": {
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
     },
     "applicationCertificate": {
       "type": "string",
-      "defaultValue": "",
       "metadata": {
         "description": "The path to the SSL certificate file. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
-      "defaultValue": "",
       "metadata": {
         "description": "The path to the SSL key file. (Optional)"
       }
     },
     "applicationChain": {
-      "type": "string",
-      "defaultValue": "",
+      "type": "string",    
       "metadata": {
         "description": "The path to the SSL chain file. (Optional)"
       }
