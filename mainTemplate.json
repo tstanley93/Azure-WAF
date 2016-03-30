@@ -115,18 +115,21 @@
     },
     "applicationCertificate": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "The path to the SSL certificate file. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "The path to the SSL key file. (Optional)"
       }
     },
     "applicationChain": {
-      "type": "string",    
+      "type": "string",
+      "defaultValue": "",
       "metadata": {
         "description": "The path to the SSL chain file. (Optional)"
       }

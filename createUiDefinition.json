@@ -28,7 +28,8 @@
                 {
                   "name": "adminUsername",
                   "type": "Microsoft.Compute.UserNameTextBox",
-                  "label": "Username",
+                  "label": "F5 WAF Cluster Username",
+                  "defaultValue": "azureuser",
                   "toolTip": "Admin username for the virtual machines. Same Credientials is to SSH to the box.",
                   "osPlatform": "Linux"
                 },
@@ -99,7 +100,14 @@
                       "Standard_D3",
                       "Standard_D4"
                     ]
-                  }
+                  },
+                  "osPlatform": "Linux",
+                  "imageReference": {
+                    "publisher": "f5-networks",
+                    "offer": "f5-big-ip",
+                    "sku": "f5-bigip-virtual-edition-best-byol"
+                  },
+                  "count": "[steps('infrastructureConfig').numberOFWAFs]"
                 }
               ]
             },
@@ -115,7 +123,7 @@
                 {
                   "name": "licenseToken1",
                   "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
+                  "label": "BYOL Token 1",
                   "defaultValue": "Required",
                   "toolTip": " BYOL Token for the first F5 WAF node.",
                   "constraints": {
@@ -125,8 +133,7 @@
                 {
                   "name": "licenseToken2",
                   "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
-                  "defaultValue": "Only if Needed",
+                  "label": "BYOL Token 2 (Only if Needed)",
                   "toolTip": " BYOL Token for the second F5 WAF node.",
                   "constraints": {
                     "required": false
@@ -135,8 +142,7 @@
                 {
                   "name": "licenseToken3",
                   "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
-                  "defaultValue": "Only if Needed",
+                  "label": "BYOL Token 3 (Only if Needed)",
                   "toolTip": " BYOL Token for the third F5 WAF node.",
                   "constraints": {
                     "required": false
@@ -145,8 +151,7 @@
                 {
                   "name": "licenseToken4",
                   "type": "Microsoft.Common.TextBox",
-                  "label": "BYOL Token",
-                  "defaultValue": "Only if Needed",
+                  "label": "BYOL Token 4 (Only if Needed)",
                   "toolTip": " BYOL Token for the fourth F5 WAF node.",
                   "constraints": {
                     "required": false
@@ -332,6 +337,7 @@
                   "type": "Microsoft.Common.DropDown",
                   "label": "Security Blocking Level",
                   "defaultValue": "Medium",
+                  "toolTip": "The Blocking Level of the WAF Policy.",
                   "constraints": {
                     "required": true,
                     "allowedValues": [
@@ -354,7 +360,7 @@
                   "name": "applicationCertificate",
                   "type": "Microsoft.Common.TextBox",
                   "label": "Application Certificate Path",
-                  "toolTip": "The path to the SSL certificate file. (Optional)",
+                  "toolTip": "Type the path to the SSL certificate file. (Optional)",
                   "constraints": {
                     "required": false
                   }
