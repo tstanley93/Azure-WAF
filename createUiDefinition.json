@@ -88,17 +88,18 @@
                   "label": "Virtual machine size",
                   "toolTip": "The size of virtual machine to provision for each cluster node.",
                   "recommendedSizes": [
-                    "Standard_D1",
-                    "Standard_D2",
-                    "Standard_D3",
-                    "Standard_D4"
+                    "Standard_D2_v2",
+                    "Standard_D3_v2",
+                    "Standard_D4_v2"
                   ],
                   "constraints": {
                     "allowedSizes": [
-                      "Standard_D1",
-                      "Standard_D2",
-                      "Standard_D3",
-                      "Standard_D4"
+                      "Standard_D2_v2",
+                      "Standard_D3_v2",
+                      "Standard_D4_v2",
+                      "Standard_D11_v2",
+                      "Standard_D12_v2",
+                      "Standard_D13_v2"
                     ]
                   },
                   "osPlatform": "Linux",
