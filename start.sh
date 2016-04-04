@@ -44,17 +44,19 @@
 ## asmarr=4 #secure string of SSL key file path
 ## asmarr=5 #secure string of SSL chain file path
 
-## Build the arrays based on the semicolon delimited command line argument passed from json template.
-IFS=';' read -ra devicearr <<< "$1"    
+## Build the arrays based on the semicolon delimited command line argument passed from json template, and save them to a file.
+IFS=';' read -ra devicearr <<< "$1"
+echo "$1" >> /config/inbound_params.txt
 IFS=';' read -ra vipportarr <<< "$2"    
-IFS=';' read -ra protocolarr <<< "$3"    
+echo "$2" >> /config/inbound_params.txt
+IFS=';' read -ra protocolarr <<< "$3"   
+echo "$3" >> /config/inbound_params.txt 
 IFS=';' read -ra hostarr <<< "$4"    
-IFS=';' read -ra appportarr <<< "$5"    
+echo "$4" >> /config/inbound_params.txt
+IFS=';' read -ra appportarr <<< "$5" 
+echo "$5" >> /config/inbound_params.txt   
 IFS=';' read -ra asmarr <<< "$6"
-
-certfilename= ""
-keyfilename= ""
-chainfilename= ""
+echo "$6" >> /config/inbound_params.txt
 
 ## Get certificate file if it was supplied.
 if [ ${asmarr[3]} != "" ]
@@ -66,6 +68,7 @@ then
 	certfilename=${certpatharr[${certlastposition}]}
 	curl -kO ${asmarr[3]}
 	certpath="file::/config/ssl/$certfilename"
+	mv ./"$certfilename" /config/ssl/"$certfilename"
 fi
 
 ## Get key file if it was supplied.
@@ -78,6 +81,7 @@ then
 	keyfilename=${keypatharr[${keylastposition}]}
 	curl -kO ${asmarr[4]}
 	keypath="file::/config/ssl/$keyfilename"
+	mv ./"$keyfilename" /config/ssl/"$keyfilename"
 fi
 
 ## Get chain file if it was supplied.
@@ -90,6 +94,7 @@ then
 	chainfilename=${chainpatharr[${chainlastposition}]}
 	curl -kO ${asmarr[5]}
 	chainpath="file::/config/ssl/$chainfilename"
+	mv ./"$chainfilename" /config/ssl/"$chainfilename"
 fi
 
 
@@ -105,18 +110,6 @@ echo $jsonfile > /config/blackbox.conf
 
 ## Move the files and run them.
 mv ./azuresecurity.sh /config/azuresecurity.sh
-if [ "$certfilename" != "" ]
-then
-	mv ./"$certfilename" /config/ssl/"$certfilename"
-fi
-if [ "$keyfilename" != "" ]
-then
-	mv ./"$keyfilename" /config/ssl/"$keyfilename"
-fi
-if [ "$chainilename" != "" ]
-then
-	mv ./"$chainfilename" /config/ssl/"$chainfilename"
-fi
 chmod +w /config/startup
 echo "/config/azuresecurity.sh" >> /config/startup
 chmod u+x /config/azuresecurity.sh
