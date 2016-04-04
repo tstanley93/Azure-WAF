@@ -436,9 +436,9 @@
         "name": "wafcopy"
       },
       "plan": {
-        "name": "f5-bigip-virtual-edition-best-byol",
+        "name": "bigip-waf-byol-preview-2",
         "publisher": "f5-networks",
-        "product": "f5-big-ip"
+        "product": "f5-waf-evaluation"
       },
       "properties": {
         "availabilitySet": {
@@ -455,8 +455,8 @@
         "storageProfile": {
           "imageReference": {
             "publisher": "f5-networks",
-            "offer": "f5-big-ip",
-            "sku": "f5-bigip-virtual-edition-best-byol",
+            "offer": "f5-waf-evaluation",
+            "sku": "bigip-waf-byol-preview-2",
             "version": "latest"
           },
           "osDisk": {
