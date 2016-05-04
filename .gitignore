@@ -279,3 +279,17 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/logos
+/f5_waf_test_01_03_28_2016_03_12_05.zip
+/Azure_WAF_1_0_8.zip
+/Azure_WAF_1_0_7.zip
+/Azure_WAF_1_0_6.zip
+/Azure_WAF_1_0_5.zip
+/Azure_WAF_1_0_4.zip
+/Azure_WAF_1_0_3.zip
+/Azure_WAF_1_0_2.zip
+/Azure_WAF_1_0_1.zip
+/Azure_WAF_1_0_0.zip
+/azuresecurity-4.sh
+/azuresecurity-3.sh
+/azuresecurity-2.sh
