@@ -141,6 +141,20 @@
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
     },
+    "certLocation": {
+      "type": "string",
+      "defaultValue": "thomas02",
+      "metadata": {
+        "description": "The storage account name that contains your certificates. (Optional)"
+      }
+    },
+    "certLocationKey": {
+      "type": "string",
+      "defaultValue": "27NSK+TILJod5ILApmLw6Us4ZiSy7+l0yHXqC1SCqGmESG3yTu00vCwyiDf7+KQxftPR7hv6ARuNV2Uf/7fnjw==",
+      "metadata": {
+        "description": "The key for your storage account that contains your certificates. (Optional)"
+      }
+    },
     "applicationCertificate": {
       "type": "string",
       "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.crt",
@@ -519,6 +533,30 @@
       "apiVersion": "2015-05-01-preview",
       "properties": {
         "accountType": "Standard_LRS"
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/',variables('wafNamePrefix'),0)]"
+      ],
+      "location": "[parameters('location')]",
+      "name": "[concat(variables('wafNamePrefix'),0,'/certs')]",
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "fileUris": [
+            "[parameters('applicationKey')]",
+            "[parameters('applicationCertificate')]"
+          ]
+        },
+        "protectedSettings": {
+          "storageAccountName": "[parameters('certLocation')]",
+          "storageAccountKey": "[parameters('certLocationKey')]"
+        }
       }
     },
     {
