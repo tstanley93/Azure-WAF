@@ -62,27 +62,6 @@
         "description": "The License Token for the first BYOL F5 Web Application Firewall."
       }
     },
-    "licenseToken2": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "(Optional) The License Token for the second BYOL F5 Web Application Firewall if applicablbe."
-      }
-    },
-    "licenseToken3": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "(Optional) The License Token for the third BYOL F5 Web Application Firewall if applicablbe."
-      }
-    },
-    "licenseToken4": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "(Optional) The License Token for the fourth BYOL F5 Web Application Firewall if applicablbe."
-      }
-    },
     "applicationName": {
       "type": "string",
       "defaultValue": "myAppName",
@@ -143,14 +122,14 @@
     },
     "applicationCertificate": {
       "type": "string",
-      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.crt",
+      "defaultValue": "",
       "metadata": {
         "description": "The path to the SSL certificate file in your storage account. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
-      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.key",
+      "defaultValue": "",
       "metadata": {
         "description": "The path to the SSL key file in your storage account. (Optional)"
       }
