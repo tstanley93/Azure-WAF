@@ -26,14 +26,14 @@
     },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_A3",
+      "defaultValue": "Standard_D2",
       "metadata": {
         "description": "The size of the Virtual Hardware Instance."
       },
       "allowedValues": [
-        "Standard_D2 (2 Core)",
-        "Standard_A3 (4 Core)",
-        "Standard_A4 (8 Core)"
+        "Standard_D2",
+        "Standard_A3",
+        "Standard_A4"
       ]
     },
     "adminUsername": {
