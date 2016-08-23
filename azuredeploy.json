@@ -521,6 +521,28 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('wafNamePrefix'),0,'/certs')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/',variables('wafNamePrefix'),0)]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "fileUris": [
+            "parameters('applicationChain')",
+            "parameters('applicationKey')",
+            "parameters('applicationCertificate')"            
+          ],
+          "commandToExecute": ""
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('wafNamePrefix'),0,'/start')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[parameters('location')]",
@@ -533,10 +555,10 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/azuresecurity.sh",
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh",
+            "http://cdn.f5.com/product/blackbox/staging/azure/azuresecurity.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')))]"
         }
       }
     }

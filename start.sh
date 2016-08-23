@@ -64,7 +64,7 @@ then
 	certlength=${#certpatharr[@]}
 	certlastposition=$((certlength - 1))
 	certfilename=${certpatharr[${certlastposition}]}
-	curl -kO ${asmarr[3]}
+	#curl -kO ${asmarr[3]}
 	certpath="file::/config/ssl/$certfilename"
 fi
 
@@ -76,7 +76,7 @@ then
 	keylength=${#keypatharr[@]}
 	keylastposition=$((keylength - 1))
 	keyfilename=${keypatharr[${keylastposition}]}
-	curl -kO ${asmarr[4]}
+	#curl -kO ${asmarr[4]}
 	keypath="file::/config/ssl/$keyfilename"
 fi
 
@@ -88,7 +88,7 @@ then
 	chainlength=${#chainpatharr[@]}
 	chainlastposition=$((chainlength - 1))
 	chainfilename=${chainpatharr[${chainlastposition}]}
-	curl -kO ${asmarr[5]}
+	#curl -kO ${asmarr[5]}
 	chainpath="file::/config/ssl/$chainfilename"
 fi
 
