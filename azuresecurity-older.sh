@@ -1,4 +1,51 @@
 #!/bin/bash
+###########################################################################
+##       ffff55555                                                       ##
+##     fffff f555555                                                     ##
+##   fff      f5    5          Blackbox Deployment Script Version 1.8.3  ##
+##  ff    fffff     555                                                  ##
+##  ff    fffff f555555                                                  ##
+## fff       f     55555             Written By: F5 Networks             ##
+## f        ff     55555                                                 ##
+## fff   ffff      ..:55             Date Created: 10/31/2013            ##
+## fff    fff5555 ..::,5             Last Updated: 06/01/2015            ##
+##  ff    fff 555555,;;                                                  ##
+##   f    fff  55555,;       This script is a modified version of the    ##
+##   f    fff    55,55         OpenStack auto-configuration script       ##
+##    ffffffff5555555       Written by John Gruber and George Watkins    ##
+##       fffffff55                                                       ##
+###########################################################################
+###########################################################################
+##                              Change Log                               ##
+###########################################################################
+## Version #     Name       #                    NOTES                   ##                  
+###########################################################################
+## 10/31/13#  John Gruber   # Created base functionality                 ##
+###########################################################################
+##   1.0   #  Ken Bocchino  # Modified to work for Blackbox              ##
+##         # Thomas Stanley #                                            ##
+###########################################################################
+##   1.1   #  Ken Bocchino  # Corrected Space Issue	                 ##
+###########################################################################
+##  1.1.1  #  Ken Bocchino  # Increased wait time for mcpd               ##
+###########################################################################
+##   1.2   #  Ken Bocchino  # Added base key file pull	                 ##
+###########################################################################
+##   1.5   #  Ken Bocchino  # Added iApp update 	                 ##
+###########################################################################
+##   1.5.1 #  Ken Bocchino  # Corrected basekeyfile null issue           ##
+##         #                # Corrected DHCP and added logic for Rome    ##
+###########################################################################
+##   1.7   #  Ken Bocchino  # Converted iApp input to full JSON          ##
+###########################################################################
+##   1.8   #  Ken Bocchino  # Added status and error messages for Rome   ##
+###########################################################################
+##   1.8.1 #  Ken Bocchino  # Added error handling                       ##
+###########################################################################
+##   1.8.2 #  Ken Bocchino  # Added error handling                       ##
+###########################################################################
+##   1.8.3 #  Ken Bocchino  # Updated iApp Deployment                    ##
+###########################################################################
 
 shopt -s extglob
 export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin/"
@@ -44,8 +91,8 @@ OS_SELFIP_DESCRIPTION="auto-added by blackbox-init"
 OS_PROVISION_FILE="/tmp/blackbox-provision"
 
 # CMI group add settings
-CMI_RETRIES=60
-CMI_RETRY_INTERVAL=30
+CMI_RETRIES=180
+CMI_RETRY_INTERVAL=10
 
 # Regular expressions
 LEVEL_REGEX='^(dedicated|minimum|nominal|none)$'
@@ -540,6 +587,7 @@ function configure_tmm_ifs() {
     # restart DHCP for management interface
     log "Restarting DHCP client for management interface..."
     service dhclient restart &> /dev/null
+    #tmsh modify sys db dhclient.mgmt { value disable }
   fi
   
     default_route=$(get_user_data_value {bigip}{network}{default_route})
@@ -569,6 +617,8 @@ function execute_system_cmd() {
 
 function cmi_configuration() {
      log "Provisioning CMI..."
+     # disable dhcp for mgmt - must be static for config sync to work
+     tmsh modify sys global-settings mgmt-dhcp disabled
      
      #set global hostname and device name
      hostname=$(get_user_data_value {loadbalance}{device_hostname}).azuresecurity.com
@@ -592,20 +642,13 @@ function cmi_configuration() {
      
      # find out if we are master
      master=$(get_user_data_value {loadbalance}{is_master})
-     if [[ $master == "true" ]]; then          
-          # check for Sync group
+     if [[ $master == "true" ]]; then
           device_group=`tmsh list cm device-group Sync`          
-          if [[ -z $device_group ]]; then
-               # download and apply ASM signature updates
-               device_user=admin
-               device_password="$(get_user_data_value {loadbalance}{device_password})"
-                             
-               curl -sk -u $device_user:$device_password -X POST -H "Content-Type: application/json" https://localhost/mgmt/tm/asm/tasks/update-signatures -d '{ }'
-               sleep 120
+          if [[ -z $device_group ]]; then         
                # we don't have the Sync device group; configure one to include the local device
                log "Sync device group not found, let's create it."
                # create the device group
-               device_group_cmd="tmsh create cm device-group Sync devices add { $hostname } type sync-failover network-failover disabled auto-sync enabled save-on-auto-sync true asm-sync enabled"
+               device_group_cmd="tmsh create cm device-group Sync devices add { $hostname } type sync-failover network-failover disabled auto-sync enabled asm-sync enabled"
                log "  $device_group_cmd"
                eval "$device_group_cmd 2>&1 | $LOGGER_CMD"             
           else
@@ -625,20 +668,6 @@ function cmi_configuration() {
                slave_address=$(get_user_data_value {loadbalance}{device_address})
                slave_user=admin
                slave_password="$(get_user_data_value {loadbalance}{device_password})"
-               
-               # need to wait until the startup script has finished on the master BIG-IP
-               failed=0
-               until [[ "$(curl -sk -u $master_user:$master_password -X POST -H "Content-type: application/json" https://$master_ip/mgmt/tm/util/unix-ls -d '{ "command":"run","utilCmdArgs":"/config/azuresecurity.sh" }' | grep -o "No such file or directory")" ]] || [[ $failed -eq $CMI_RETRIES ]]; do
-                    failed=$(($failed + 1))
-                    log "Master not yet ready, retrying in $CMI_RETRY_INTERVAL seconds"
-                    sleep $CMI_RETRY_INTERVAL
-               done
-               
-               if [[ $failed -ge $CMI_RETRIES ]]; then
-                    log "Could not detect that the master is ready after $failed attempts, quitting..."
-                    set_status "Failure: Could not detect that the master is ready after $failed attempts"
-                    exit
-               fi
                
                # add ourselves to the trust domain on the master
                if [[ -n $master_password && -n $slave_password ]]; then
@@ -676,43 +705,22 @@ function cmi_configuration() {
                     fi
                                                                     
                     # continue after both WAFs have synchronized
-                    log "Synchronizing..." 
-                    
-                    curl -sk -u $master_user:$master_password -X POST -H "Content-Type: application/json" https://$master_ip/mgmt/tm/cm -d '{ "command":"run","utilCmdArgs":"config-sync to-group Sync" }'
-                    sleep $CMI_RETRY_INTERVAL
-                    
-                    set_sync_cmd="tmsh modify cm device-group datasync-global-dg devices modify { $slave_hostname { set-sync-leader } }"
-                    log "  $set_sync_cmd"
-                    eval "$set_sync_cmd 2>&1 | $LOGGER_CMD"
-                    
-                    # uncomment the following command on 12.1 and later deployments
-                    # curl -sk -u $master_user:$master_password -X POST -H "Content-Type: application/json" https://$master_ip/mgmt/tm/cm -d '{ "command":"run","utilCmdArgs":"config-sync force-full-load-push to-group datasync-global-dg" }'
-                    
-                    sleep $CMI_RETRY_INTERVAL
-                    
-                    # check that the Sync device group is synchronized
+                    log "Synchronizing..."                  
+                    # check that the Sync device group is synchronized locally
                     failed=0
                     until [[ "$(curl -sk -u $slave_user:$slave_password -X GET -H "Content-type: application/json" https://localhost/mgmt/tm/cm/sync-status/ | grep -o "Sync (In Sync): All devices in the device group are in sync")" ]] || [[ $failed -eq $CMI_RETRIES ]]; do
                          failed=$(($failed + 1))
-                         
+                         # sync from the slave to the master for the datasync-global-dg device group
+                         curl -sk -u $slave_user:$slave_password -X POST -H "Content-Type: application/json" https://localhost/mgmt/tm/cm -d '{ "command":"run","utilCmdArgs":"config-sync to-group datasync-global-dg" }'
+                         # sync from the master to the slave for the Sync device group
                          curl -sk -u $master_user:$master_password -X POST -H "Content-Type: application/json" https://$master_ip/mgmt/tm/cm -d '{ "command":"run","utilCmdArgs":"config-sync to-group Sync" }'
+                         log "Not in sync yet after $failed tries, retrying in $CMI_RETRY_INTERVAL seconds..."                              
                          sleep $CMI_RETRY_INTERVAL
-                         
-                         set_sync_cmd="tmsh modify cm device-group datasync-global-dg devices modify { $slave_hostname { set-sync-leader } }"
-                         log "  $set_sync_cmd"
-                         eval "$set_sync_cmd 2>&1 | $LOGGER_CMD"
-                         
-                         # uncomment the following command on 12.1 and later deployments
-                         # curl -sk -u $master_user:$master_password -X POST -H "Content-Type: application/json" https://$master_ip/mgmt/tm/cm -d '{ "command":"run","utilCmdArgs":"config-sync force-full-load-push to-group datasync-global-dg" }'
-                         
-                         sleep $CMI_RETRY_INTERVAL
-                         
-                         log "Not in sync yet after $failed tries, retrying..."                              
                     done
                     
                     if [[ $failed -ge $CMI_RETRIES ]]; then
-                         log "Could not synchronize the device group after 60 minutes, quitting..."
-                         set_status "Failure: Could not synchronize the device group after 60 minutes."
+                         log "Could not synchronize the device group after $failed attempts, quitting..."
+                         set_status "Failure: Could not synchronize the device group after $failed attempts"
                          exit
                     fi
                     
@@ -738,8 +746,6 @@ function datagroup_configuration() {
      appsvc_data_group=`tmsh list ltm data-group internal appsvc_datagroup`
      # this data group controls overwrite of the ASM policy
      appstatus_data_group=`tmsh list ltm data-group internal appstatus_datagroup`
-     # this data group maps application virtual server ports to pool members for enhanced ASM logging
-     appmap_data_group=`tmsh list ltm data-group internal appmap_datagroup`
      
      # Check to see if we are master
      if [[ $master == "true" ]]; then
@@ -752,14 +758,6 @@ function datagroup_configuration() {
                applianceid_data_group_cmd="tmsh modify ltm data-group internal /Common/applianceid_datagroup records modify { $address { data $applianceid }  }"
           fi
           
-           if [[ -z $appmap_data_group ]]; then
-               # create the empty data group
-               appmap_data_group_cmd="tmsh create ltm data-group internal /Common/appmap_datagroup type string"
-               eval "$appmap_data_group_cmd 2>&1 | $LOGGER_CMD"
-          else 
-               log "App map data group already exists."
-          fi
-          
           if [[ -z $appsvc_data_group ]]; then
                # create the data group and add master
                appsvc_data_group_cmd="tmsh create ltm data-group internal /Common/appsvc_datagroup type string"
@@ -767,7 +765,7 @@ function datagroup_configuration() {
           else 
                log "App service data group already exists."
           fi
-                    
+          
           if [[ -z $appstatus_data_group ]]; then
                # create the data group and set status to 1
                appstatus_data_group_cmd="tmsh create ltm data-group internal /Common/appstatus_datagroup type string records add { status { data 1 } }"
@@ -995,11 +993,7 @@ function main() {
       wait_mcp_running
       wait_tmm_started
       log "Changing db settings..."
-      # disable single NIC autoconfig to allow CMI to work
-      tmsh modify sys db provision.1nicautoconfig value disable | eval $LOGGER_CMD
-      # untruncate remote log files
-      tmsh modify sys db tmm.maxremoteloglength value 2048 | eval $LOGGER_CMD
-      # disable GUI wizard
+      tmsh modify sys db configsync.allowmanagement value enable | eval $LOGGER_CMD
       tmsh modify sys global-settings gui-setup disabled | eval $LOGGER_CMD
       
       set_status "In Progress: CMI"      
@@ -1013,9 +1007,9 @@ function main() {
       if [[ $master == "true" ]]; then
            set_status "In Progress: Configuring Applications"     
            iapp_configuration           
-           set_status "In Progress: Configuring Applications - OK"        
-      else            
-           log "We are a slave, nothing left to do."
+           set_status "In Progress: Configuring Applications - OK"
+      else 
+          log "We are a slave, nothing left to do."
       fi
       
       sleep 10      
