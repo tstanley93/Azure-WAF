@@ -546,12 +546,12 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "parameters('applicationKey')",
-            "parameters('applicationCertificate')"
+            "[parameters('applicationKey')]",
+            "[parameters('applicationCertificate')]"
           ],
           "protectedSettings": {
-            "storageAccountName": "parameters('certLocation')",
-            "storageAccountKey": "parameters('certLocationKey')"
+            "storageAccountName": "[parameters('certLocation')]",
+            "storageAccountKey": "[parameters('certLocationKey')]"
           }          
         }
       },      
