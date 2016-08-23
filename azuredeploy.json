@@ -565,7 +565,7 @@
       "apiVersion": "2015-05-01-preview",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/extensions',variables('wafNamePrefix'),0,'/certs')]"
+        "[concat('Microsoft.Compute/virtualMachines/extensions/',variables('wafNamePrefix'),0,'/certs')]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
