@@ -57,6 +57,7 @@
     },
     "licenseToken1": {
       "type": "string",
+      "defaultValue": "BHDLA-WTLZR-WZRFJ-ZLWPQ-QJUVXDV",
       "metadata": {
         "description": "The License Token for the first BYOL F5 Web Application Firewall."
       }
@@ -98,6 +99,7 @@
     },
     "applicationAddress": {
       "type": "string",
+      "defaultValue": "192.168.1.1",
       "metadata": {
         "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
       }
@@ -141,28 +143,28 @@
     },
     "certLocation": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "thomas02",
       "metadata": {
         "description": "The storage account name that contains your certificates. (Optional)"
       }
     },
     "certLocationKey": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "27NSK+TILJod5ILApmLw6Us4ZiSy7+l0yHXqC1SCqGmESG3yTu00vCwyiDf7+KQxftPR7hv6ARuNV2Uf/7fnjw==",
       "metadata": {
         "description": "The key for your storage account that contains your certificates. (Optional)"
       }
     },
     "applicationCertificate": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.crt",
       "metadata": {
         "description": "The path to the SSL certificate file in your storage account. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.key",
       "metadata": {
         "description": "The path to the SSL key file in your storage account. (Optional)"
       }
@@ -534,6 +536,7 @@
       }
     },
     {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2015-05-01-preview",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/',variables('wafNamePrefix'),0)]"
@@ -548,14 +551,13 @@
           "fileUris": [
             "[parameters('applicationKey')]",
             "[parameters('applicationCertificate')]"
-          ],
-          "protectedSettings": {
-            "storageAccountName": "[parameters('certLocation')]",
-            "storageAccountKey": "[parameters('certLocationKey')]"
-          }          
+          ]
+        },
+        "protectedSettings": {
+          "storageAccountName": "[parameters('certLocation')]",
+          "storageAccountKey": "[parameters('certLocationKey')]"
         }
-      },      
-      "type": "Microsoft.Compute/virtualMachines/extensions"
+      }
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
