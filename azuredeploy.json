@@ -31,10 +31,9 @@
         "description": "The size of the Virtual Hardware Instance."
       },
       "allowedValues": [
-        "Standard_A3",
-        "Standard_A4",
-        "Standard_D2",
-        "Standard_D5"
+        "Standard_D2 (2 Core)",
+        "Standard_A3 (4 Core)",
+        "Standard_A4 (8 Core)"
       ]
     },
     "adminUsername": {
