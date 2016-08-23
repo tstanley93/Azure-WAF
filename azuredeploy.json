@@ -535,7 +535,7 @@
         "settings": {
           "fileUris": [
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/azuresecurity.sh",
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"         
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
           ],
           "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'))]"
         }
