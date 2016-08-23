@@ -546,14 +546,14 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "parameters('applicationChain')",
-            "parameters('applicationKey')",
-            "parameters('applicationCertificate')"
+            "[parameters('applicationChain')]",
+            "[parameters('applicationKey')]",
+            "[parameters('applicationCertificate')]"
           ],
           "protectedSettings": {
             "commandToExecute": "",
-            "storageAccountName": "parameters('certLocation')",
-            "storageAccountKey": "parameters('certLocationKey')"
+            "storageAccountName": "[parameters('certLocation')]",
+            "storageAccountKey": "[parameters('certLocationKey')]"
           }          
         }
       },      
