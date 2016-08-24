@@ -27,8 +27,8 @@
   <ItemGroup>
     <None Include="azuredeploy_cert.json" />
     <None Include="azuredeploy.json" />
-    <None Include="azuresecurity-old.sh" />
     <None Include="azuresecurity-older.sh" />
+    <None Include="azuresecurity_old.sh" />
     <None Include="azuresecurity.sh" />
     <None Include="blackbox_check.json" />
     <None Include="Deployment.targets">

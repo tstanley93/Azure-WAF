@@ -723,9 +723,17 @@ function cmi_configuration() {
           else
                log "Sync device group found, returning to deployment."
           fi
-          
           log "CMI configuration successful, returning to deployment."
      fi
+     log "Deleting credentials."
+     # remove credentials from unformatted JSON file
+     jq 'del(.loadbalance.master_password) | del(.loadbalance.device_password)' /config/blackbox.conf > /config/blackbox.new
+     rm -f /config/blackbox.conf
+     mv -f /config/blackbox.new /config/blackbox.conf
+     # remove credentials from formatted JSON file
+     jq -c 'del(.loadbalance.master_password) | del(.loadbalance.device_password)' /config/formatted_blackbox.conf > /config/formatted_blackbox.new
+     rm -f /config/formatted_blackbox.conf
+     mv -f /config/formatted_blackbox.new /config/formatted_blackbox.conf
 }
 
 function datagroup_configuration() {
@@ -747,9 +755,7 @@ function datagroup_configuration() {
                # create the data group and add master
                applianceid_data_group_cmd="tmsh create ltm data-group internal /Common/applianceid_datagroup type string records add { $address { data $applianceid }  }"
           else 
-               # add master to the data group
-               # this is for the case where a master has rejoined the cluster using the same IP
-               applianceid_data_group_cmd="tmsh modify ltm data-group internal /Common/applianceid_datagroup records modify { $address { data $applianceid }  }"
+               log "Appliance ID data group already exists."
           fi
           
            if [[ -z $appmap_data_group ]]; then
@@ -904,7 +910,7 @@ iapp_configuration() {
                          fi
                          
                          # run the iApp command
-                         tmsh -c "$command"
+                         tmsh -c "$command" > $OS_USER_DATA_STATUS_PATH 2>&1
                          iapp_status=$(cat $OS_USER_DATA_STATUS_PATH)
                          # check that the application service we just deployed is present; if not, report failure
                          if [[ -z $(get_application_service ${deployment}) ]]; then
@@ -933,7 +939,7 @@ function main() {
   log "Starting Blackbox auto-configuration..."
   set_status "In Progress: Starting Configuration"
     
-    #ensure json format - remove new lines
+    # ensure json format - remove new lines
     cat $OS_USER_DATA_PATH | sed 's/\t/ /g' | sed ':a;N;$!ba;s/\n/ /g'  > $OS_USER_DATA_TEMP_PATH
     
     # ensure that mcpd is started and alive before doing anything

@@ -515,7 +515,7 @@
         "settings": {
           "fileUris": [
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh",
-            "http://cdn.f5.com/product/blackbox/staging/azure/azuresecurity.sh"
+            "http://https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/azuresecurity.sh"
           ],
           "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')))]"
         }
