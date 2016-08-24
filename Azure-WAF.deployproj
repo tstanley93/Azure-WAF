@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Include="azuredeploy_cert.json" />
     <None Include="azuredeploy.json" />
+    <None Include="azuredeploy_json.json" />
     <None Include="azuresecurity-older.sh" />
     <None Include="azuresecurity_old.sh" />
     <None Include="azuresecurity.sh" />

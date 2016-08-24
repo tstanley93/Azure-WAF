@@ -18,22 +18,32 @@
         "South Central US",
         "Southeast Aisa",
         "West Europe",
-        "West US"
+        "West US",
+        "West US 2"
       ],
       "metadata": {
         "description": "The data center you want to install these Web Applicatin Firewall's into."
       }
     },
+    "numberOFWAFs": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "The number of Web Applicatin Firewall's (Up to 4) that will be deployed infront of your application."
+      }
+    },
     "vmSize": {
       "type": "string",
-      "defaultValue": "Standard_D2",
+      "defaultValue": "Standard_A3",
       "metadata": {
         "description": "The size of the Virtual Hardware Instance."
       },
       "allowedValues": [
-        "Standard_D2",
         "Standard_A3",
-        "Standard_A4"
+        "Standard_A4",
+        "Standard_D2",
+        "Standard_D2_v2",
+        "Standard_D5"
       ]
     },
     "adminUsername": {
@@ -57,7 +67,6 @@
     },
     "licenseToken1": {
       "type": "string",
-      "defaultValue": "BHDLA-WTLZR-WZRFJ-ZLWPQ-QJUVXDV",
       "metadata": {
         "description": "The License Token for the first BYOL F5 Web Application Firewall."
       }
@@ -99,7 +108,6 @@
     },
     "applicationAddress": {
       "type": "string",
-      "defaultValue": "192.168.1.1",
       "metadata": {
         "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
       }
@@ -141,39 +149,25 @@
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
     },
-    "certLocation": {
-      "type": "string",
-      "defaultValue": "thomas02",
-      "metadata": {
-        "description": "The storage account name that contains your certificates. (Optional)"
-      }
-    },
-    "certLocationKey": {
-      "type": "string",
-      "defaultValue": "27NSK+TILJod5ILApmLw6Us4ZiSy7+l0yHXqC1SCqGmESG3yTu00vCwyiDf7+KQxftPR7hv6ARuNV2Uf/7fnjw==",
-      "metadata": {
-        "description": "The key for your storage account that contains your certificates. (Optional)"
-      }
-    },
     "applicationCertificate": {
       "type": "string",
-      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.crt",
+      "defaultValue": "",
       "metadata": {
-        "description": "The path to the SSL certificate file in your storage account. (Optional)"
+        "description": "The path to the SSL certificate file. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
-      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.key",
+      "defaultValue": "",
       "metadata": {
-        "description": "The path to the SSL key file in your storage account. (Optional)"
+        "description": "The path to the SSL key file. (Optional)"
       }
     },
     "applicationChain": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "The path to the SSL chain file in your storage account. (Optional)"
+        "description": "The path to the SSL chain file. (Optional)"
       }
     }
   },
@@ -195,8 +189,7 @@
     "sshMgtID": "[concat(variables('lbID'),'/inboundNatRules/sshmgt')]",
     "publicIPID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('dnsNameForPublicIP'))]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-    "numberOFWAFs": 1
+    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]"
   },
   "resources": [
     {
@@ -254,7 +247,7 @@
         "[concat('Microsoft.Network/networkSecurityGroups/', parameters('dnsNameForPublicIP'),'-nsg')]"
       ],
       "copy": {
-        "count": "[variables('numberOFWAFs')]",
+        "count": "[parameters('numberOFWAFs')]",
         "name": "niccopy"
       },
       "properties": {
@@ -266,7 +259,7 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[concat(variables('ipAddress'),add(4,copyindex()))]",
+              "privateIPAddress": "[concat(variables('ipAddress'),copyindex(4))]",
               "subnet": {
                 "id": "[variables('subnetRef')]"
               },
@@ -304,7 +297,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "443",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -318,7 +311,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "22",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -332,7 +325,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "880",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -346,7 +339,7 @@
               "sourcePortRange": "*",
               "destinationAddressPrefix": "*",
               "destinationPortRange": "8444",
-              "protocol": "TCP",
+              "protocol": "Tcp",
               "direction": "Inbound",
               "access": "Allow"
             }
@@ -418,7 +411,7 @@
       "location": "[parameters('location')]",
       "copy": {
         "name": "lbNatLoop",
-        "count": "[variables('numberOFWAFs')]"
+        "count": "[parameters('numberOFWAFs')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
@@ -427,7 +420,7 @@
         "frontendIPConfiguration": {
           "id": "[variables('frontEndIPConfigID')]"
         },
-        "protocol": "tcp",
+        "protocol": "Tcp",
         "frontendPort": "[copyIndex(8443)]",
         "backendPort": 443,
         "enableFloatingIP": false
@@ -440,7 +433,7 @@
       "location": "[parameters('location')]",
       "copy": {
         "name": "lbNatLoop",
-        "count": "[variables('numberOFWAFs')]"
+        "count": "[parameters('numberOFWAFs')]"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
@@ -475,13 +468,13 @@
         "[concat('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]"
       ],
       "copy": {
-        "count": "[variables('numberOFWAFs')]",
+        "count": "[parameters('numberOFWAFs')]",
         "name": "wafcopy"
       },
       "plan": {
-        "name": "f5-bigip-virtual-edition-best-byol",
+        "name": "f5-waf-solution-byol",
         "publisher": "f5-networks",
-        "product": "f5-big-ip"
+        "product": "f5-web-application-firewall"
       },
       "properties": {
         "availabilitySet": {
@@ -498,8 +491,8 @@
         "storageProfile": {
           "imageReference": {
             "publisher": "f5-networks",
-            "offer": "f5-big-ip",
-            "sku": "f5-bigip-virtual-edition-best-byol",
+            "offer": "f5-web-application-firewall",
+            "sku": "f5-waf-solution-byol",
             "version": "latest"
           },
           "osDisk": {
@@ -537,35 +530,35 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('wafNamePrefix'),0,'/start')]",
       "apiVersion": "2016-03-30",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/',variables('wafNamePrefix'),0)]"
       ],
-      "location": "[parameters('location')]",
-      "name": "[concat(variables('wafNamePrefix'),0,'/certs')]",
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
         "type": "CustomScriptForLinux",
         "typeHandlerVersion": "1.5",
         "settings": {
           "fileUris": [
-            "[parameters('applicationKey')]",
-            "[parameters('applicationCertificate')]"
-          ]
-        },
-        "protectedSettings": {
-          "storageAccountName": "[parameters('certLocation')]",
-          "storageAccountKey": "[parameters('certLocationKey')]"
+            "https://f5cloudlibs.blob.core.windows.net/archive/runScripts.sh"
+          ],
+          "commandToExecute": "[concat('./runScripts.sh --onboard \"--background --output /var/log/onboard.log --host 127.0.0.1 -u admin -p admin --hostname ', concat(variables('wafNamePrefix'), 0, '.azuresecurity.com'), ' --set-password admin:', parameters('adminPassword'), ' --license ', parameters('licenseToken1'), ' --db provision.1nicautoconfig:disable --db tmm.maxremoteloglength:2048 --module ltm:nominal --module asm:nominal --module afm:none \" --cluster \"--background --output /var/log/cluster.log --host 127.0.0.1 -u admin -p admin --config-sync-ip ', concat(variables('ipAddress'), 4), ' --create-group --device-group Sync --sync-type sync-failover --device ', concat(variables('wafNamePrefix'), 0, '.azuresecurity.com'), ' --auto-sync --save-on-auto-sync --asm-sync', '\"')]"
         }
       }
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('wafNamePrefix'),0,'/start')]",
+      "copy": {
+        "name": "extensionLoop",
+        "count": "[sub(parameters('numberOfWAFs'), 1)]"
+      },
+      "name": "[concat(variables('wafNamePrefix'),copyindex(1),'/start')]",
       "apiVersion": "2016-03-30",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/',variables('wafNamePrefix'),0,'/extensions/certs')]"
+        "[concat('Microsoft.Compute/virtualMachines/',variables('wafNamePrefix'),copyindex(1))]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -573,10 +566,9 @@
         "typeHandlerVersion": "1.5",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh",
-            "http://cdn.f5.com/product/blackbox/staging/azure/azuresecurity.sh"
+            "https://f5cloudlibs.blob.core.windows.net/archive/runScripts.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')))]"
+          "commandToExecute": "[concat('./runScripts.sh --onboard \"--background --output /var/log/onboard.log --host 127.0.0.1 -u admin -p admin --hostname ', concat(variables('wafNamePrefix'), copyindex(1), '.azuresecurity.com'), ' --set-password admin:', parameters('adminPassword'), ' --license ', parameters('licenseToken2'), ' --db provision.1nicautoconfig:disable --db tmm.maxremoteloglength:2048 --module ltm:nominal --module asm:nominal --module afm:none\" --cluster \"--background --output /var/log/cluster.log --host 127.0.0.1 -u admin -p admin --config-sync-ip ', concat(variables('ipAddress'), 5), ' --join-group --sync --device-group Sync --remote-host ', concat(variables('ipAddress'), 4), ' --remote-user admin --remote-password ', parameters('adminPassword'), '\"')]"
         }
       }
     }
