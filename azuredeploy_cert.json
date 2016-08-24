@@ -530,11 +530,8 @@
           "fileUris": [
             "[parameters('applicationKey')]",
             "[parameters('applicationCertificate')]"
-          ]
-        },
-        "protectedSettings": {
-          "storageAccountName": "[parameters('certLocation')]",
-          "storageAccountKey": "[parameters('certLocationKey')]"
+          ],
+          "commandToExecute": "ls"
         }
       }
     },
