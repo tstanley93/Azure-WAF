@@ -35,10 +35,17 @@
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
+    <None Include="deploymentTemplate.json" />
     <None Include="HTMLPage1.html" />
     <None Include="blackbox.conf" />
+    <None Include="Microsoft.Compute.json" />
     <None Include="README.md" />
     <None Include="start.sh" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Microsoft_1Compute_1json__JSONSchema="https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#" deploymentTemplate_1json__JSONSchema="https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

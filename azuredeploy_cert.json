@@ -532,6 +532,10 @@
             "[parameters('applicationCertificate')]"
           ],
           "commandToExecute": "ls"
+        },
+        "protectedSettings": {
+          "storageAccountName": "[parameters('certLocation')]",
+          "storageAccountKey": "[parameters('certLocationKey')]"
         }
       }
     },
