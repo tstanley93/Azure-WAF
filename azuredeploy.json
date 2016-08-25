@@ -400,7 +400,7 @@
             }
           },
           {
-            "name": "lbrule",
+            "name": "lbrulehttps",
             "properties": {
               "frontendIPConfiguration": {
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
