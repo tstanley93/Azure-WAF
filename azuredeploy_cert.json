@@ -64,7 +64,7 @@
     },
     "applicationName": {
       "type": "string",
-      "defaultValue": "myAppName",
+      "defaultValue": "tmag01",
       "metadata": {
         "description": "Please provide a simple name for your application."
       }
@@ -78,7 +78,7 @@
     },
     "applicationAddress": {
       "type": "string",
-      "defaultValue": "192.168.1.1",
+      "defaultValue": "13.88.12.157",
       "metadata": {
         "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
       }
@@ -115,42 +115,35 @@
     },
     "applicationFQDN": {
       "type": "string",
-      "defaultValue": "www.contoso.com",
+      "defaultValue": "tmag01.eisconsult.com",
       "metadata": {
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
     },
-    "certLocation": {
+    "certSASToken": {
       "type": "string",
-      "defaultValue": "thomas02",
+      "defaultValue": "?sv=2015-04-05&ss=f&srt=sco&sp=rl&se=2016-08-26T23:17:12Z&st=2016-08-25T15:17:12Z&spr=https&sig=OikZlG4vRhgM9NeuO74btOp4hdj7SKZovLSsG5auoFE%3D",
       "metadata": {
-        "description": "The storage account name that contains your certificates. (Optional)"
-      }
-    },
-    "certLocationKey": {
-      "type": "string",
-      "defaultValue": "27NSK+TILJod5ILApmLw6Us4ZiSy7+l0yHXqC1SCqGmESG3yTu00vCwyiDf7+KQxftPR7hv6ARuNV2Uf/7fnjw==",
-      "metadata": {
-        "description": "The key for your storage account that contains your certificates. (Optional)"
+        "description": "The SAS token that you generated for your storage account that contains your certificates. (Optional)"
       }
     },
     "applicationCertificate": {
       "type": "string",
-      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.crt",
+      "defaultValue": "https://thomas02.file.core.windows.net/certs/EIS-WildCard.crt",
       "metadata": {
         "description": "The path to the SSL certificate file in your storage account. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
-      "defaultValue": "https://thomas02.blob.core.windows.net/blobs/EIS-WildCard.key",
+      "defaultValue": "https://thomas02.file.core.windows.net/certs/EIS-WildCard.key",
       "metadata": {
         "description": "The path to the SSL key file in your storage account. (Optional)"
       }
     },
     "applicationChain": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "https://thomas02.file.core.windows.net/certs/star.eisconsult.com.ca-bundle",
       "metadata": {
         "description": "The path to the SSL chain file in your storage account. (Optional)"
       }
@@ -528,16 +521,9 @@
         "typeHandlerVersion": "1.5",
         "settings": {
           "fileUris": [
-            "[parameters('applicationKey')]",
-            "[parameters('applicationCertificate')]",
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh",
-            "http://cdn.f5.com/product/blackbox/staging/azure/azuresecurity.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"            
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')))]"
-        },
-        "protectedSettings": {
-          "storageAccountName": "[parameters('certLocation')]",
-          "storageAccountKey": "[parameters('certLocationKey')]"          
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')),';',parameters('certSASToken'))]"
         }
       }
     }
