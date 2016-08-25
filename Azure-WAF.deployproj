@@ -25,27 +25,17 @@
   <Import Condition=" Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets') " Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets" />
   <!-- vertag<:>end -->
   <ItemGroup>
-    <None Include="azuredeploy_cert.json" />
     <None Include="azuredeploy.json" />
-    <None Include="azuredeploy_json.json" />
-    <None Include="azuresecurity-older.sh" />
-    <None Include="azuresecurity_old.sh" />
-    <None Include="azuresecurity.sh" />
-    <None Include="blackbox_check.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <None Include="deploymentTemplate.json" />
-    <None Include="HTMLPage1.html" />
-    <None Include="blackbox.conf" />
-    <None Include="Microsoft.Compute.json" />
     <None Include="README.md" />
     <None Include="start.sh" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Microsoft_1Compute_1json__JSONSchema="https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#" deploymentTemplate_1json__JSONSchema="https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#" />
+      <UserProperties />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
