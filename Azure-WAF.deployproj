@@ -39,4 +39,9 @@
     <None Include="start.sh" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties azuredeploy_1json__JSONSchema="https://schema.management.azure.com/schemas/2015-06-15/deploymentTemplate.json#" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

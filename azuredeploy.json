@@ -147,6 +147,13 @@
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
     },
+    "certSASToken": {
+      "type": "string",
+      "defaultValue": "?sv=2015-04-05&ss=f&srt=sco&sp=rl&se=2016-08-26T23:17:12Z&st=2016-08-25T15:17:12Z&spr=https&sig=OikZlG4vRhgM9NeuO74btOp4hdj7SKZovLSsG5auoFE%3D",
+      "metadata": {
+        "description": "The SAS token that you generated for your storage account that contains your certificates. (Optional)"
+      }
+    },
     "applicationCertificate": {
       "type": "string",
       "defaultValue": "",
@@ -282,6 +289,9 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkSecurityGroups",
+      "tags": {
+        "displayName": "Netowrk Security Group"
+      },
       "name": "[concat(parameters('dnsNameForPublicIP'), '-nsg')]",
       "location": "[parameters('location')]",
       "properties": {
@@ -347,6 +357,9 @@
     },
     {
       "apiVersion": "2015-06-15",
+      "tags": {
+        "displayName": "Azure Load Balancer"
+      },
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))]"
       ],
@@ -370,7 +383,7 @@
         ],
         "loadBalancingRules": [
           {
-            "Name": "lbrule",
+            "name": "lbrule",
             "properties": {
               "frontendIPConfiguration": {
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
@@ -386,6 +399,24 @@
               "backendPort": 880,
               "idleTimeoutInMinutes": 15
             }
+          },
+          {
+            "name": "lbrule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
+              },
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/probes/lbhttpsprobe')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 443,
+              "backendPort": 8444,
+              "idleTimeoutInMinutes": 15
+            }
           }
         ],
         "probes": [
@@ -397,6 +428,15 @@
               "numberOfProbes": 2
             },
             "name": "lbprobe"
+          },
+          {
+            "properties": {
+              "protocol": "Tcp",
+              "port": 8444,
+              "intervalInSeconds": 15,
+              "numberOfProbes": 2
+            },
+            "name": "lbhttpsprobe"
           }
         ]
       },
@@ -404,6 +444,9 @@
     },
     {
       "apiVersion": "2015-06-15",
+      "tags": {
+        "displayName": "GUI Mgmt Inbound NAT Rule"
+      },
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "name": "[concat(variables('loadBalancerName'),'/guimgt', copyIndex())]",
       "location": "[parameters('location')]",
@@ -426,6 +469,9 @@
     },
     {
       "apiVersion": "2015-06-15",
+      "tags": {
+        "displayName": "SSH Mgmt Inbound NAT Rule"
+      },
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "name": "[concat(variables('loadBalancerName'),'/sshmgt', copyIndex())]",
       "location": "[parameters('location')]",
@@ -448,6 +494,9 @@
     },
     {
       "apiVersion": "2015-06-15",
+      "tags": {
+        "displayName": "Availability Set"
+      },
       "location": "[parameters('location')]",
       "name": "[variables('availabilitySetName')]",
       "type": "Microsoft.Compute/availabilitySets"
@@ -519,6 +568,9 @@
     },
     {
       "name": "[variables('newStorageAccountName')]",
+      "tags": {
+        "displayName": "Storage Account"
+      },
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[parameters('location')]",
       "apiVersion": "2015-05-01-preview",
@@ -528,6 +580,9 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
+      "tags": {
+        "displayName": "WAF0 Extension"
+      },
       "name": "[concat(variables('wafNamePrefix'),0,'/start')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[parameters('location')]",
@@ -540,15 +595,17 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/azuresecurity.sh",
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"         
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')),';',parameters('certSASToken'))]"
         }
       }
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
+      "tags": {
+        "displayName": "Additional WAF Extension"
+      },
       "copy": {
         "name": "extensionLoop",
         "count": "[sub(parameters('numberOfWAFs'), 1)]"
@@ -565,10 +622,9 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/azuresecurity.sh",
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Multi-WAF/start.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',parameters('licenseToken2'),';',toLower(parameters('applicationName')),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain')))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')),';',parameters('certSASToken'))]"
         }
       }
     }

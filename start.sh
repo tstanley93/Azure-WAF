@@ -8,7 +8,7 @@
 ## fff       f  f5555555             Written By: EIS Consulting          ##
 ## f        ff  f5555555                                                 ##
 ## fff   ffff       f555             Date Created: 12/02/2015            ##
-## fff    fff5555    555             Last Updated: 01/21/2016            ##
+## fff    fff5555    555             Last Updated: 08/25/2016            ##
 ##  ff    fff 55555  55                                                  ##
 ##   f    fff  555   5       This script will start the pre-configured   ##
 ##   f    fff       55       WAF configuration.                          ##
@@ -43,20 +43,20 @@
 ## asmarr=3 #secure string of SSL certificate file path
 ## asmarr=4 #secure string of SSL key file path
 ## asmarr=5 #secure string of SSL chain file path
+## asmarr=6 string of SAS Token used to gain access to the cert files
 
-## Build the arrays based on the semicolon delimited command line argument passed from json template, and save them to a file.
-IFS=';' read -ra devicearr <<< "$1"
-echo "$1" >> /config/inbound_params.txt
+## Build the arrays based on the semicolon delimited command line argument passed from json template.
+IFS=';' read -ra devicearr <<< "$1"    
 IFS=';' read -ra vipportarr <<< "$2"    
-echo "$2" >> /config/inbound_params.txt
-IFS=';' read -ra protocolarr <<< "$3"   
-echo "$3" >> /config/inbound_params.txt 
+IFS=';' read -ra protocolarr <<< "$3"    
 IFS=';' read -ra hostarr <<< "$4"    
-echo "$4" >> /config/inbound_params.txt
-IFS=';' read -ra appportarr <<< "$5" 
-echo "$5" >> /config/inbound_params.txt   
+IFS=';' read -ra appportarr <<< "$5"    
 IFS=';' read -ra asmarr <<< "$6"
-echo "$6" >> /config/inbound_params.txt
+
+certfilename= ""
+keyfilename= ""
+chainfilename= ""
+sasToken=${asmarr[6]}
 
 ## Get certificate file if it was supplied.
 if [ "${asmarr[3]}" != "" ]
@@ -66,9 +66,8 @@ then
 	certlength=${#certpatharr[@]}
 	certlastposition=$((certlength - 1))
 	certfilename=${certpatharr[${certlastposition}]}
-	curl -kO ${asmarr[3]}
+	curl -k ${asmarr[3]}${asmarr[6]} -o /config/ssl/${certfilename}
 	certpath="file::/config/ssl/$certfilename"
-	mv ./"$certfilename" /config/ssl/"$certfilename"
 fi
 
 ## Get key file if it was supplied.
@@ -79,9 +78,8 @@ then
 	keylength=${#keypatharr[@]}
 	keylastposition=$((keylength - 1))
 	keyfilename=${keypatharr[${keylastposition}]}
-	curl -kO ${asmarr[4]}
+	curl -k ${asmarr[4]}${asmarr[6]} -o /config/ssl/${keyfilename}
 	keypath="file::/config/ssl/$keyfilename"
-	mv ./"$keyfilename" /config/ssl/"$keyfilename"
 fi
 
 ## Get chain file if it was supplied.
@@ -92,9 +90,8 @@ then
 	chainlength=${#chainpatharr[@]}
 	chainlastposition=$((chainlength - 1))
 	chainfilename=${chainpatharr[${chainlastposition}]}
-	curl -kO ${asmarr[5]}
+	curl -k ${asmarr[5]}${asmarr[6]} -o /config/ssl/${chainfilename}
 	chainpath="file::/config/ssl/$chainfilename"
-	mv ./"$chainfilename" /config/ssl/"$chainfilename"
 fi
 
 
@@ -109,8 +106,8 @@ jsonfile='{"loadbalance":{"is_master":"'${devicearr[0]}'","master_hostname":"'${
 echo $jsonfile > /config/blackbox.conf
 
 ## Move the files and run them.
-mv ./azuresecurity.sh /config/azuresecurity.sh
+curl -k http://cdn.f5.com/product/blackbox/staging/azure/azuresecurity.sh -o /config/azuresecurity.sh
 chmod +w /config/startup
 echo "/config/azuresecurity.sh" >> /config/startup
 chmod u+x /config/azuresecurity.sh
-/bin/bash /config/azuresecurity.sh
+bash /config/azuresecurity.sh
