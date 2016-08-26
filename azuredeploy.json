@@ -138,7 +138,7 @@
     },
     "certSASToken": {
       "type": "string",
-      "defaultValue": "?sv=2015-04-05&ss=f&srt=sco&sp=rl&se=2016-08-26T23:17:12Z&st=2016-08-25T15:17:12Z&spr=https&sig=OikZlG4vRhgM9NeuO74btOp4hdj7SKZovLSsG5auoFE%3D",
+      "defaultValue": "?sv=2015-04-05&ss=f&srt=sco&sp=rl&se=2016-08-27T23:55:11Z&st=2016-08-26T15:55:11Z&spr=https&sig=lHLESxe06CJ4aIZIaAFAKcrcrpZLJvfb%2F%2F2BDbpfmZs%3D",
       "metadata": {
         "description": "The SAS token that you generated for your storage account that contains your certificates. (Optional)"
       }
@@ -584,9 +584,9 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/WAF-Solution/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'),';',parameters('certSASToken'))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',replace(parameters('licenseToken1'),' ',''),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'),';',parameters('certSASToken'))]"
         }
       }
     },
@@ -611,9 +611,9 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/WAF-Solution/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',parameters('licenseToken2'),';',toLower(parameters('applicationName')),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'),';',parameters('certSASToken')))]"
+          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',replace(parameters('licenseToken2'),' ',''),';',toLower(parameters('applicationName')),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'),';',parameters('certSASToken')))]"
         }
       }
     }
@@ -621,11 +621,11 @@
   "outputs": {
     "GUI-URL": {
       "type": "string",
-      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443')]"
+      "value": "[concat('https://',reference(variables('publicIPID')).dnsSettings.fqdn,':8443','  8444 for second WAF')]"
     },
     "SSH-URL": {
       "type": "string",
-      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,' ',8022)]"
+      "value": "[concat(reference(variables('publicIPID')).dnsSettings.fqdn,'  8022','  8023 for second WAF')]"
     }
   }
 }

@@ -53,9 +53,9 @@ IFS=';' read -ra hostarr <<< "$4"
 IFS=';' read -ra appportarr <<< "$5"    
 IFS=';' read -ra asmarr <<< "$6"
 
-certfilename= ""
-keyfilename= ""
-chainfilename= ""
+certfilename=""
+keyfilename=""
+chainfilename=""
 sasToken=${asmarr[6]}
 
 ## Get certificate file if it was supplied.
