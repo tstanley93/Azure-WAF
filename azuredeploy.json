@@ -29,7 +29,11 @@
       "defaultValue": 2,
       "metadata": {
         "description": "The number of Web Applicatin Firewall's (Up to 4) that will be deployed infront of your application."
-      }
+      },
+      "allowedValues": [
+        1,
+        2
+      ]
     },
     "vmSize": {
       "type": "string",
@@ -73,20 +77,6 @@
       "defaultValue": "",
       "metadata": {
         "description": "(Optional) The License Token for the second BYOL F5 Web Application Firewall if applicablbe."
-      }
-    },
-    "licenseToken3": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "(Optional) The License Token for the third BYOL F5 Web Application Firewall if applicablbe."
-      }
-    },
-    "licenseToken4": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "(Optional) The License Token for the fourth BYOL F5 Web Application Firewall if applicablbe."
       }
     },
     "applicationName": {
@@ -596,7 +586,7 @@
           "fileUris": [
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')),';',parameters('certSASToken'))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'),';',parameters('certSASToken'))]"
         }
       }
     },
@@ -623,7 +613,7 @@
           "fileUris": [
             "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')),';',parameters('certSASToken'))]"
+          "commandToExecute": "[concat('bash start.sh ','false',';',concat(variables('wafNamePrefix'),add(copyindex(),1)),';',concat(variables('ipAddress'),add(add(4,copyindex()),1),';',parameters('adminPassword'),';',parameters('licenseToken2'),';',toLower(parameters('applicationName')),';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',parameters('applicationCertificate'),';',parameters('applicationKey'),';',parameters('applicationChain'),';',parameters('certSASToken')))]"
         }
       }
     }
