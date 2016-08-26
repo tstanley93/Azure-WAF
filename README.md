@@ -11,25 +11,25 @@ The F5 WAF's will be fully configured with the base Security Blocking template t
 ### Parameter Definitions: ###
 
 * location
-  * Required
+  * **Required**
   * Choose the data center you want to install these Web Applicatin Firewall's into from the drop down list.
 * numberOFWAFs
-  * Required
-  * The number of Web Applicatin Firewall's (Up to 4) that will be deployed infront of your application.
+  * **Required**
+  * The number of Web Applicatin Firewall's (1-2) that will be deployed infront of your application.
 * vmSize
-  * Required
+  * **Required**
   * Choose the size of the Virtual Machine Instance from the list.
 * adminUsername
-  * Required
+  * **Required**
   * User name to login to the Web Applicatin Firewall.
 * adminPassword
-  * Required
+  * **Required**
   * Password to login to the Web Applicatin Firewall.
 * dnsNameForPublicIP
-  * Required
+  * **Required**
   * Unique DNS Name for the Public IP used to access the Web Application Firewalls for management.
 * licenseToken1
-  * Required
+  * **Required**
   * The License Token for the first BYOL F5 Web Application Firewall.
 * licenseToken2
   * Optional
@@ -44,25 +44,25 @@ The F5 WAF's will be fully configured with the base Security Blocking template t
   * The License Token for the first BYOL F5 Web Application Firewall.
   * Use only if you need more than one.
 * applicationName
-  * Required
+  * **Required**
   * Please provide a simple name for your application.
 * applicationProtocols
-  * Required
+  * **Required**
   * A semi-colon separated list of protocols (http;https) that will be used to configure the WAF's VIP's, (e.g. http for port 80 and https for SSL).
 * applicationAddress
-  * Required
+  * **Required**
   * The public IP address or DNS FQDN of the Application that this WAF is for.
 * applicationPorts
-  * Required
+  * **Required**
   * A semi-colon separated list of ports, (80;443) that your applicaiton is listening on, (e.g. 80 and 443).
 * applicationType
-  * Required
+  * **Required**
   * Select the operating system that your application is running on. (Linux OS or a Windows OS)
 * blockingLevel
-  * Required
+  * **Required**
   * Please select how aggressive you would like the blocking level of this WAF to be.  Remember that the more aggressive the blocking level, the more potential there is for false-positives that the WAF might detect.
 * applicationFQDN
-  * Required
+  * **Required**
   * The Fully Qualified Domain Name of your application. (e.g. www.example.com).
 * applicationCertificate
   * Optional

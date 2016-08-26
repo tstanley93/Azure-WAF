@@ -81,7 +81,7 @@
     },
     "applicationName": {
       "type": "string",
-      "defaultValue": "myAppName",
+      "defaultValue": "tstanley93app4",
       "metadata": {
         "description": "Please provide a simple name for your application."
       }
