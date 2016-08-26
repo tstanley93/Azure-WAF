@@ -95,6 +95,7 @@
     },
     "applicationAddress": {
       "type": "string",
+      "defaultValue": "13.85.77.179",
       "metadata": {
         "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
       }
@@ -131,7 +132,7 @@
     },
     "applicationFQDN": {
       "type": "string",
-      "defaultValue": "www.contoso.com",
+      "defaultValue": "tstanley93app4.eisconsult.com",
       "metadata": {
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
@@ -145,21 +146,21 @@
     },
     "applicationCertificate": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "https://thomas02.file.core.windows.net/certs/EIS-WildCard.crt",
       "metadata": {
         "description": "The path to the SSL certificate file. (Optional)"
       }
     },
     "applicationKey": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "https://thomas02.file.core.windows.net/certs/EIS-WildCard.key",
       "metadata": {
         "description": "The path to the SSL key file. (Optional)"
       }
     },
     "applicationChain": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "https://thomas02.file.core.windows.net/certs/star.eisconsult.com.ca-bundle",
       "metadata": {
         "description": "The path to the SSL chain file. (Optional)"
       }
