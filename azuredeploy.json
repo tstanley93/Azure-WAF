@@ -83,7 +83,7 @@
       "type": "string",
       "defaultValue": "tstanley93app4",
       "metadata": {
-        "description": "Please provide a simple name for your application."
+        "description": "Please provide a simple non-FQDN name for your application."
       }
     },
     "applicationProtocols": {
@@ -97,7 +97,7 @@
       "type": "string",
       "defaultValue": "13.85.77.179",
       "metadata": {
-        "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
+        "description": "The DNS FQDN of the Application that this WAF is for."
       }
     },
     "applicationPorts": {
