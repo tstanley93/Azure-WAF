@@ -110,4 +110,4 @@ curl -k http://cdn.f5.com/product/blackbox/staging/azure/azuresecurity.sh -o /co
 chmod +w /config/startup
 echo "/config/azuresecurity.sh" >> /config/startup
 chmod u+x /config/azuresecurity.sh
-source /config/azuresecurity.sh
+bash /config/azuresecurity.sh
