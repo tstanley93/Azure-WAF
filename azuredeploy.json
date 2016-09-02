@@ -2,28 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "location": {
-      "type": "string",
-      "defaultValue": "West US",
-      "allowedValues": [
-        "Brazil South",
-        "Central US",
-        "East Aisa",
-        "East US",
-        "East US 2",
-        "Japan East",
-        "Japan West",
-        "North Central US",
-        "North Europe",
-        "South Central US",
-        "Southeast Aisa",
-        "West Europe",
-        "West US"
-      ],
-      "metadata": {
-        "description": "The data center you want to install these Web Applicatin Firewall's into."
-      }
-    },
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_D2",
@@ -62,25 +40,11 @@
         "description": "The License Token for the first BYOL F5 Web Application Firewall."
       }
     },
-    "applicationName": {
-      "type": "string",
-      "defaultValue": "tmag01",
-      "metadata": {
-        "description": "Please provide a simple name for your application."
-      }
-    },
     "applicationProtocols": {
       "type": "string",
       "defaultValue": "http;https",
       "metadata": {
         "description": "A semi-colon separated list of protocols (http;https) that will be used to configure the WAF's VIP's, (e.g. http for port 80 and https for SSL)."
-      }
-    },
-    "applicationAddress": {
-      "type": "string",
-      "defaultValue": "13.88.12.157",
-      "metadata": {
-        "description": "The public IP address or DNS FQDN of the Application that this WAF is for."
       }
     },
     "applicationPorts": {
@@ -115,7 +79,7 @@
     },
     "applicationFQDN": {
       "type": "string",
-      "defaultValue": "tmag01.eisconsult.com",
+      "defaultValue": "www.contoso.com",
       "metadata": {
         "description": "The Fully Qualified Domain Name of your application. (e.g. www.example.com)."
       }
@@ -175,7 +139,7 @@
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[parameters('dnsNameForPublicIP')]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "PublicIPAddress"
       },
@@ -190,7 +154,7 @@
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "VirtualNetwork"
       },
@@ -214,7 +178,7 @@
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicNamePrefix'),copyindex())]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "NetworkInterface"
       },
@@ -264,7 +228,7 @@
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[concat(parameters('dnsNameForPublicIP'), '-nsg')]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
           {
@@ -331,7 +295,7 @@
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/', parameters('dnsNameForPublicIP'))]"
       ],
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "name": "[variables('loadBalancerName')]",
       "properties": {
         "frontendIPConfigurations": [
@@ -387,7 +351,7 @@
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "name": "[concat(variables('loadBalancerName'),'/guimgt', copyIndex())]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "copy": {
         "name": "lbNatLoop",
         "count": "[variables('numberOFWAFs')]"
@@ -409,7 +373,7 @@
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "name": "[concat(variables('loadBalancerName'),'/sshmgt', copyIndex())]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "copy": {
         "name": "lbNatLoop",
         "count": "[variables('numberOFWAFs')]"
@@ -429,7 +393,7 @@
     },
     {
       "apiVersion": "2015-06-15",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "name": "[variables('availabilitySetName')]",
       "type": "Microsoft.Compute/availabilitySets"
     },
@@ -437,7 +401,7 @@
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('wafNamePrefix'),copyindex())]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "WAFs"
       },
@@ -501,7 +465,7 @@
     {
       "name": "[variables('newStorageAccountName')]",
       "type": "Microsoft.Storage/storageAccounts",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "apiVersion": "2015-05-01-preview",
       "properties": {
         "accountType": "Standard_LRS"
@@ -513,7 +477,7 @@
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/',variables('wafNamePrefix'),0)]"
       ],
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "name": "[concat(variables('wafNamePrefix'),0,'/certs')]",
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -521,9 +485,9 @@
         "typeHandlerVersion": "1.5",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"            
+            "https://raw.githubusercontent.com/tstanley93/Azure-WAF/Single-WAF/start.sh"
           ],
-          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('applicationName')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationAddress'),';',replace(toLower(parameters('location')),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')),';',parameters('certSASToken'))]"
+          "commandToExecute": "[concat('bash start.sh ','true',';',concat(variables('wafNamePrefix'),0),';',concat(variables('ipAddress'),4),';',parameters('adminPassword'),';',parameters('licenseToken1'),';',toLower(parameters('dnsNameForPublicIP')),' 880;8444 ',parameters('applicationProtocols'),' ',parameters('applicationFQDN'),';',replace(toLower(resourceGroup().location),' ',''),' ',parameters('applicationPorts'),' ',toLower(parameters('applicationType')),';',toLower(parameters('blockingLevel')),';',toLower(parameters('applicationFQDN')),';',tolower(parameters('applicationCertificate')),';',tolower(parameters('applicationKey')),';',tolower(parameters('applicationChain')),';',parameters('certSASToken'))]"
         }
       }
     }
